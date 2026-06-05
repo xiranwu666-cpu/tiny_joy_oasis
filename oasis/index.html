@@ -25,29 +25,7 @@
     <link rel="alternate" hreflang="zh-Hant" id="alt-tc" href="__ALT_TC__">
     <link rel="alternate" hreflang="x-default" id="alt-default" href="__ALT_DEFAULT__">
     <script type="application/ld+json" id="structured-data">__STRUCTURED_DATA__</script>
-    <script>
-        (function() {
-            var GA_MEASUREMENT_ID = "G-JYE6MFTFTB";
-            var allowedHosts = ["tiny-joy-oasis.vercel.app"];
-            if (allowedHosts.indexOf(window.location.hostname) === -1) {
-                window.oasisAnalyticsReady = false;
-                window.oasisTrack = function() {};
-                return;
-            }
-            window.dataLayer = window.dataLayer || [];
-            window.gtag = function() { window.dataLayer.push(arguments); };
-            window.gtag("js", new Date());
-            window.gtag("config", GA_MEASUREMENT_ID, { send_page_view: false });
-            window.oasisAnalyticsReady = true;
-            window.oasisTrack = function(eventName, params) {
-                window.gtag("event", eventName, params || {});
-            };
-            var script = document.createElement("script");
-            script.async = true;
-            script.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_MEASUREMENT_ID;
-            document.head.appendChild(script);
-        })();
-    </script>
+    __GA_SNIPPET__
     <style>
         /* 全局治愈系底色：燕麦奶白到清晨薄雾蓝 */
         body {
@@ -247,6 +225,14 @@
         .seo-guide-links a { color: #94a3b8; text-decoration: none; font-size: 12px; border: 1px solid rgba(226, 232, 240, 0.72); background: rgba(255,255,255,0.46); border-radius: 999px; padding: 7px 11px; }
         .privacy-note { max-width: 760px; padding: 0 28px 34px; box-sizing: border-box; color: #94a3b8; font-size: 12px; line-height: 1.8; text-align: center; }
         .vent-note { padding: 0; margin-top: 16px; }
+        .visit-note { margin: -12px 0 26px; color: #94a3b8; font-size: 13px; line-height: 1.7; }
+        .faq-section { width: 100%; max-width: 820px; padding: 4px 28px 30px; box-sizing: border-box; color: #64748b; }
+        .faq-section h2 { font-size: 17px; text-align: center; margin: 0 0 16px; color: #475569; font-weight: 500; }
+        .faq-item { border-top: 1px solid rgba(226, 232, 240, 0.7); padding: 14px 0; }
+        .faq-item:last-child { border-bottom: 1px solid rgba(226, 232, 240, 0.7); }
+        .faq-item summary { cursor: pointer; color: #475569; font-size: 14px; list-style: none; }
+        .faq-item summary::-webkit-details-marker { display: none; }
+        .faq-item p { margin: 9px 0 0; color: #94a3b8; font-size: 13px; line-height: 1.8; }
 
         @media (max-width: 760px) {
             .top-nav { padding: 24px 20px 10px; flex-direction: column; gap: 18px; }
@@ -299,13 +285,23 @@
         <a href="/oasis/zh/guide/anonymous-venting">匿名解压</a>
         <a href="/oasis/zh/guide/cozy-web-corner">治愈小角落</a>
     </nav>
+    <section class="faq-section" id="faq-section" aria-label="OASIS FAQ">
+        <h2>一些温柔说明</h2>
+        <details class="faq-item"><summary>OASIS 是什么？</summary><p>OASIS 是一个轻量的数字避难所，适合在疲惫、焦虑、睡前或工作间隙短暂停一下。</p></details>
+        <details class="faq-item"><summary>需要登录吗？</summary><p>不需要。你可以直接使用今日拥抱、白噪音和解压池。</p></details>
+        <details class="faq-item"><summary>解压池会公开我的内容吗？</summary><p>不会。解压池不是公开留言墙，你写下的内容不会展示给其他人。</p></details>
+        <details class="faq-item"><summary>OASIS 能代替心理咨询吗？</summary><p>不能。OASIS 只是轻量情绪陪伴工具，不提供医疗或心理治疗建议。</p></details>
+        <details class="faq-item"><summary>我什么时候适合打开它？</summary><p>当你感到累、焦虑、脑子太吵，或者只是想安静几分钟的时候。</p></details>
+    </section>
     <div class="privacy-note" id="privacy-note">OASIS 是轻量情绪陪伴工具，不提供医疗或心理治疗建议。匿名解压内容不会公开展示。如你正处于危机中，请及时联系身边的人或当地专业机构。</div>
     <div id="audio-host" aria-hidden="true"></div>
 
     <script>
         var ROUTES = { 1: "today", 2: "sound", 3: "vent", 4: "joy" };
-        var PAGE_BY_ROUTE = { today: 1, sound: 2, vent: 3, joy: 4 };
+        var PUBLIC_ROUTES = { 1: "today", 2: "white-noise", 3: "release", 4: "joy" };
+        var PAGE_BY_ROUTE = { today: 1, sound: 2, "white-noise": 2, vent: 3, release: 3, joy: 4 };
         var VALID_LANGS = { en: true, zh: true, tc: true };
+        var SITE_ORIGIN = "__SITE_ORIGIN__";
         var state = { lang: "zh", page: 1 };
         var breatheAnimation = null;
         var breathePhaseTimer = null;
@@ -322,6 +318,7 @@
         const audioInstances = {};
         const fallbackAudioInstances = {};
         var fallbackAudioContext = null;
+        var visitState = null;
         var guideNav = {
             zh: [
                 ["digital-hug", "数字拥抱"],
@@ -353,15 +350,29 @@
                 tabs: ["温柔话", "白噪音", "放下它", "交换快乐"],
                 footer: "无账号 · 不评判 · 只停留一小会儿",
                 privacy: "OASIS 是轻量情绪陪伴工具，不提供医疗或心理治疗建议。匿名解压内容不会公开展示。如你正处于危机中，请及时联系身边的人或当地专业机构。",
+                visit: {
+                    first: "欢迎来到这里。今天先停一下就好。",
+                    todayAgain: "你今天已经来过这里了。愿这一次也能轻一点。",
+                    returning: "你已经来这里停过 {count} 天。不是打卡，只是记录你来照顾过自己。",
+                    todayPause: "这是你今天给自己的一个小暂停。"
+                },
+                faqTitle: "一些温柔说明",
+                faq: [
+                    ["OASIS 是什么？", "OASIS 是一个轻量的数字避难所，适合在疲惫、焦虑、睡前或工作间隙短暂停一下。"],
+                    ["需要登录吗？", "不需要。你可以直接使用今日拥抱、白噪音和解压池。"],
+                    ["解压池会公开我的内容吗？", "不会。解压池不是公开留言墙，你写下的内容不会展示给其他人。"],
+                    ["OASIS 能代替心理咨询吗？", "不能。OASIS 只是轻量情绪陪伴工具，不提供医疗或心理治疗建议。"],
+                    ["我什么时候适合打开它？", "当你感到累、焦虑、脑子太吵，或者只是想安静几分钟的时候。"]
+                ],
                 share: {
                     button: "复制这份温柔",
                     copied: "已复制，可以分享给一个刚好需要的人。",
                     prefix: "今天给你一个小小的数字拥抱："
                 },
                 seo: {
-                    today: ["OASIS 数字避难所 - 累的时候停一下", "一个轻量数字避难所：给疲惫、焦虑、睡前和工作间隙的人一句温柔话、白噪音和匿名解压入口。"],
-                    sound: ["OASIS 白噪音呼吸器 - 放松心情与呼吸引导", "在声音绿洲里播放白噪音，并跟随柔和的 4-7-8 呼吸引导放松身心。"],
-                    vent: ["OASIS 解压池 - 私密放下此刻的重量", "写下一句此刻不想带走的东西，然后把它放下。内容不会公开展示。"],
+                    today: ["今日拥抱｜给疲惫大人的一句温柔话", "当你感到疲惫、焦虑或需要短暂停一下时，来 OASIS 获得一句今日拥抱。"],
+                    sound: ["白噪音｜睡前、专注和放空时的声音角落", "选择雨声、海浪、森林风或咖啡馆背景音，让自己慢慢安静下来。"],
+                    vent: ["解压池｜匿名写下此刻不想带走的情绪", "一个不需要登录的轻量解压入口，把压力写下来，然后让它慢慢沉入水底。"],
                     joy: ["OASIS 快乐交换商店 - 匿名交换小开心", "匿名提交一个小小快乐，并从数据库里收到陌生人的幸福瞬间。"]
                 },
                 pages: {
@@ -413,15 +424,29 @@
                 tabs: ["Kind Words", "White Noise", "Put It Down", "Joy Swap"],
                 footer: "NO ACCOUNT · NO JUDGMENT · JUST A SMALL PAUSE",
                 privacy: "OASIS is a lightweight emotional companion, not medical care or therapy advice. Private release notes are never shown publicly. If you are in crisis, please contact someone you trust or local professional support.",
+                visit: {
+                    first: "Welcome here. For today, pausing is enough.",
+                    todayAgain: "You have already been here today. May this visit feel a little lighter too.",
+                    returning: "You have paused here on {count} days. Not a streak, just a small record that you cared for yourself.",
+                    todayPause: "This is one small pause you gave yourself today."
+                },
+                faqTitle: "A few soft notes",
+                faq: [
+                    ["What is OASIS?", "OASIS is a lightweight digital sanctuary for tired, anxious, bedtime, or in-between moments."],
+                    ["Do I need to log in?", "No. You can use Today's Hug, White Noise, and the Release Pool directly."],
+                    ["Will the Release Pool show my writing publicly?", "No. The Release Pool is not a public wall. What you write is not shown to other people."],
+                    ["Can OASIS replace therapy?", "No. OASIS is a lightweight emotional companion and does not provide medical care or therapy advice."],
+                    ["When should I open it?", "When you feel tired, anxious, overstimulated, or simply want a quiet few minutes."]
+                ],
                 share: {
                     button: "Copy this kindness",
                     copied: "Copied. Send it to someone who may need a softer minute.",
                     prefix: "A tiny digital hug for today:"
                 },
                 seo: {
-                    today: ["OASIS Digital Sanctuary - Pause when you are tired", "A lightweight digital sanctuary for tired, anxious, sleepy, or in-between moments: kind words, white noise, and private release."],
-                    sound: ["OASIS Sound Oasis - White noise and breathing guide", "Play soft white-noise placeholders and follow a calm 4-7-8 breathing guide for a mindful break."],
-                    vent: ["OASIS Release Pool - Privately put down a heavy moment", "Write one thing you do not want to carry and let it go. Private release notes are never shown publicly."],
+                    today: ["Today's Hug | A gentle pause for tired minds", "A tiny emotional pause for anxious, tired, or overstimulated moments."],
+                    sound: ["White Noise | Calm sounds for sleep, focus, and reset", "Choose a gentle background sound to help yourself slow down."],
+                    vent: ["Release Pool | Let go of what you don't want to carry", "Write down what feels heavy, privately and gently. No login required."],
                     joy: ["OASIS Joy Swapper - Anonymous happy moment exchange", "Submit a tiny happy moment anonymously and receive a stranger's joy from the database."]
                 },
                 pages: {
@@ -473,15 +498,29 @@
                 tabs: ["溫柔話", "白噪音", "放下它", "交換快樂"],
                 footer: "無帳號 · 不評判 · 只停留一小會兒",
                 privacy: "OASIS 是輕量情緒陪伴工具，不提供醫療或心理治療建議。匿名解壓內容不會公開展示。如你正處於危機中，請及時聯繫身邊的人或當地專業機構。",
+                visit: {
+                    first: "歡迎來到這裡。今天先停一下就好。",
+                    todayAgain: "你今天已經來過這裡了。願這一次也能輕一點。",
+                    returning: "你已經來這裡停過 {count} 天。不是打卡，只是記錄你來照顧過自己。",
+                    todayPause: "這是你今天給自己的一個小暫停。"
+                },
+                faqTitle: "一些溫柔說明",
+                faq: [
+                    ["OASIS 是什麼？", "OASIS 是一個輕量的數位避難所，適合在疲憊、焦慮、睡前或工作間隙短暫停一下。"],
+                    ["需要登入嗎？", "不需要。你可以直接使用今日擁抱、白噪音和解壓池。"],
+                    ["解壓池會公開我的內容嗎？", "不會。解壓池不是公開留言牆，你寫下的內容不會展示給其他人。"],
+                    ["OASIS 能代替心理諮詢嗎？", "不能。OASIS 只是輕量情緒陪伴工具，不提供醫療或心理治療建議。"],
+                    ["我什麼時候適合打開它？", "當你感到累、焦慮、腦子太吵，或者只是想安靜幾分鐘的時候。"]
+                ],
                 share: {
                     button: "複製這份溫柔",
                     copied: "已複製，可以分享給一個剛好需要的人。",
                     prefix: "今天給你一個小小的數位擁抱："
                 },
                 seo: {
-                    today: ["OASIS 數位避難所 - 累的時候停一下", "一個輕量數位避難所：給疲憊、焦慮、睡前和工作間隙的人一句溫柔話、白噪音和匿名解壓入口。"],
-                    sound: ["OASIS 白噪音呼吸器 - 放鬆心情與呼吸引導", "在聲音綠洲裡播放白噪音，並跟隨柔和的 4-7-8 呼吸引導放鬆身心。"],
-                    vent: ["OASIS 解壓池 - 私密放下此刻的重量", "寫下一句此刻不想帶走的東西，然後把它放下。內容不會公開展示。"],
+                    today: ["今日擁抱｜給疲憊大人的一句溫柔話", "當你感到疲憊、焦慮或需要短暫停一下時，來 OASIS 獲得一句今日擁抱。"],
+                    sound: ["白噪音｜睡前、專注和放空時的聲音角落", "選擇雨聲、海浪、森林風或咖啡館背景音，讓自己慢慢安靜下來。"],
+                    vent: ["解壓池｜匿名寫下此刻不想帶走的情緒", "一個不需要登入的輕量解壓入口，把壓力寫下來，然後讓它慢慢沉入水底。"],
                     joy: ["OASIS 快樂交換商店 - 匿名交換小開心", "匿名提交一個小小快樂，並從資料庫裡收到陌生人的幸福瞬間。"]
                 },
                 pages: {
@@ -637,12 +676,83 @@
             return state.lang === "en" ? "“" + text + "”" : "“" + text + "”";
         }
 
+        function todayKey() {
+            var now = new Date();
+            var month = String(now.getMonth() + 1).padStart(2, "0");
+            var day = String(now.getDate()).padStart(2, "0");
+            return now.getFullYear() + "-" + month + "-" + day;
+        }
+
+        function recordLocalVisit() {
+            try {
+                var key = "oasis.visitDays";
+                var today = todayKey();
+                var stored = JSON.parse(window.localStorage.getItem(key) || "[]");
+                var days = Array.isArray(stored) ? stored.filter(function(item) {
+                    return typeof item === "string";
+                }) : [];
+                var alreadyToday = days.indexOf(today) !== -1;
+                if (!alreadyToday) {
+                    days.push(today);
+                    days = Array.from(new Set(days)).slice(-180);
+                    window.localStorage.setItem(key, JSON.stringify(days));
+                }
+                visitState = {
+                    count: days.length,
+                    alreadyToday: alreadyToday
+                };
+            } catch (error) {
+                visitState = null;
+            }
+        }
+
+        function updateVisitNote() {
+            var note = byId("visit-note");
+            if (!note) {
+                return;
+            }
+            if (!visitState) {
+                note.innerText = copy[state.lang].visit.todayPause;
+                return;
+            }
+            var visit = copy[state.lang].visit;
+            if (visitState.alreadyToday) {
+                note.innerText = visit.todayAgain;
+                return;
+            }
+            if (visitState.count <= 1) {
+                note.innerText = visit.first;
+                return;
+            }
+            note.innerText = visit.returning.replace("{count}", visitState.count);
+        }
+
         function getOrigin() {
             return window.location.origin || "";
         }
 
+        function getSeoOrigin() {
+            return SITE_ORIGIN && SITE_ORIGIN.indexOf("__") === -1 ? SITE_ORIGIN : getOrigin();
+        }
+
+        function publicRoute(page) {
+            return PUBLIC_ROUTES[page] || "today";
+        }
+
+        function preservedSearch() {
+            var source = new URLSearchParams(window.location.search);
+            var kept = new URLSearchParams();
+            source.forEach(function(value, key) {
+                if (key.indexOf("utm_") === 0 || ["gclid", "fbclid", "msclkid"].indexOf(key) !== -1) {
+                    kept.set(key, value);
+                }
+            });
+            var query = kept.toString();
+            return query ? "?" + query : "";
+        }
+
         function routeUrl(lang, page) {
-            return "/oasis/" + lang + "/" + ROUTES[page];
+            return "/oasis/" + lang + "/" + publicRoute(page) + preservedSearch();
         }
 
         function readInitialState() {
@@ -670,6 +780,7 @@
             byId("footer-tips").innerText = t.footer;
             byId("privacy-note").innerText = t.privacy;
             syncGuideLinks();
+            syncFaq();
             document.documentElement.lang = t.langAttr;
             updateSeo();
         }
@@ -686,10 +797,12 @@
 
         function updateSeo() {
             var route = ROUTES[state.page];
+            var visibleRoute = publicRoute(state.page);
             var seo = copy[state.lang].seo[route];
             var title = seo[0];
             var description = seo[1];
-            var canonical = getOrigin() + "/oasis/" + state.lang + "/" + route;
+            var seoOrigin = getSeoOrigin();
+            var canonical = seoOrigin + "/oasis/" + state.lang + "/" + visibleRoute;
             var keywords = {
                 en: "digital sanctuary, anxiety relief website, cozy web corner, digital hug, white noise breathing, anonymous joy exchange, OASIS",
                 zh: "治愈小网站, 放松心情, 缓解焦虑, 数字拥抱, 白噪音呼吸, 匿名快乐交换, OASIS",
@@ -701,16 +814,29 @@
             setMeta("og-title", "content", title);
             setMeta("og-description", "content", description);
             setMeta("og-url", "content", canonical);
-            setMeta("og-image", "content", getOrigin() + "/oasis/og-image.svg");
+            setMeta("og-image", "content", seoOrigin + "/oasis/og-image.svg");
             setMeta("og-locale", "content", copy[state.lang].ogLocale);
             setMeta("twitter-title", "content", title);
             setMeta("twitter-description", "content", description);
-            setMeta("twitter-image", "content", getOrigin() + "/oasis/og-image.svg");
+            setMeta("twitter-image", "content", seoOrigin + "/oasis/og-image.svg");
             setMeta("canonical-link", "href", canonical);
-            setMeta("alt-en", "href", getOrigin() + "/oasis/en/" + route);
-            setMeta("alt-zh", "href", getOrigin() + "/oasis/zh/" + route);
-            setMeta("alt-tc", "href", getOrigin() + "/oasis/tc/" + route);
-            setMeta("alt-default", "href", getOrigin() + "/oasis/en/" + route);
+            setMeta("alt-en", "href", seoOrigin + "/oasis/en/" + visibleRoute);
+            setMeta("alt-zh", "href", seoOrigin + "/oasis/zh/" + visibleRoute);
+            setMeta("alt-tc", "href", seoOrigin + "/oasis/tc/" + visibleRoute);
+            setMeta("alt-default", "href", seoOrigin + "/oasis/en/" + visibleRoute);
+        }
+
+        function syncFaq() {
+            var faq = byId("faq-section");
+            var current = copy[state.lang];
+            if (!faq || !current.faq) {
+                return;
+            }
+            faq.innerHTML =
+                '<h2>' + escapeHtml(current.faqTitle) + '</h2>' +
+                current.faq.map(function(item) {
+                    return '<details class="faq-item"><summary>' + escapeHtml(item[0]) + '</summary><p>' + escapeHtml(item[1]) + '</p></details>';
+                }).join("");
         }
 
         function setMeta(id, attr, value) {
@@ -809,9 +935,11 @@
 
         function renderToday(page) {
             byId("c-content").innerHTML =
+                '<div class="visit-note" id="visit-note"></div>' +
                 '<p class="desc">' + escapeHtml(page.desc) + '</p>' +
                 '<button class="happy-btn" onclick="triggerHug(event)">' + escapeHtml(page.button) + '</button>' +
                 '<div class="status-line" id="hug-status"></div>';
+            updateVisitNote();
         }
 
         function renderSound(page) {
@@ -1286,6 +1414,7 @@
         });
 
         document.addEventListener("DOMContentLoaded", function() {
+            recordLocalVisit();
             readInitialState();
             syncShell();
             goToPage(state.page, true);

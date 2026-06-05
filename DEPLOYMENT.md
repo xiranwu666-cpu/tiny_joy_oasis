@@ -41,6 +41,8 @@ python3 scripts/upload_oasis_audio_to_supabase.py
 1. Push this folder to GitHub.
 2. Import the repo in Vercel.
 3. Add environment variables:
+   - `NEXT_PUBLIC_SITE_URL=https://tiny-joy-oasis.vercel.app`
+   - `NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX` optional; leave blank to disable GA4
    - `SUPABASE_URL`
    - `SUPABASE_ANON_KEY`
    - `SUPABASE_SERVICE_ROLE_KEY`

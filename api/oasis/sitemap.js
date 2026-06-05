@@ -1,11 +1,11 @@
-const { GUIDE_SLUGS, LANGS, ROUTES, originFor } = require("../../lib/oasis-vercel");
+const { GUIDE_SLUGS, LANGS, ROUTES, originFor, publicRouteFor } = require("../../lib/oasis-vercel");
 
 module.exports = async function handler(req, res) {
   const origin = originFor(req);
   const urls = [];
   for (const lang of Object.keys(LANGS)) {
     for (const route of Array.from(ROUTES).sort()) {
-      urls.push({ loc: `${origin}/oasis/${lang}/${route}`, priority: "0.8" });
+      urls.push({ loc: `${origin}/oasis/${lang}/${publicRouteFor(route)}`, priority: "0.8" });
     }
     for (const slug of GUIDE_SLUGS) {
       urls.push({ loc: `${origin}/oasis/${lang}/guide/${slug}`, priority: "0.7" });
