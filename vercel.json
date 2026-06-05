@@ -24,6 +24,10 @@
       "destination": "/api/oasis/page?lang=zh&route=today"
     },
     {
+      "source": "/oasis/:lang/guide/:slug",
+      "destination": "/api/oasis/guide/:slug?lang=:lang"
+    },
+    {
       "source": "/oasis/:lang/:route",
       "destination": "/api/oasis/page?lang=:lang&route=:route"
     }

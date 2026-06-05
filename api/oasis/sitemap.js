@@ -1,17 +1,20 @@
-const { LANGS, ROUTES, originFor } = require("../../lib/oasis-vercel");
+const { GUIDE_SLUGS, LANGS, ROUTES, originFor } = require("../../lib/oasis-vercel");
 
 module.exports = async function handler(req, res) {
   const origin = originFor(req);
   const urls = [];
   for (const lang of Object.keys(LANGS)) {
     for (const route of Array.from(ROUTES).sort()) {
-      urls.push(`${origin}/oasis/${lang}/${route}`);
+      urls.push({ loc: `${origin}/oasis/${lang}/${route}`, priority: "0.8" });
+    }
+    for (const slug of GUIDE_SLUGS) {
+      urls.push({ loc: `${origin}/oasis/${lang}/guide/${slug}`, priority: "0.7" });
     }
   }
   const body = [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    ...urls.map((url) => `  <url><loc>${url}</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>`),
+    ...urls.map((url) => `  <url><loc>${url.loc}</loc><changefreq>weekly</changefreq><priority>${url.priority}</priority></url>`),
     "</urlset>",
     ""
   ].join("\n");

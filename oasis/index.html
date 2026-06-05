@@ -10,7 +10,14 @@
     <meta property="og:description" id="og-description" content="__SEO_DESCRIPTION__">
     <meta property="og:type" content="website">
     <meta property="og:url" id="og-url" content="__CANONICAL_URL__">
+    <meta property="og:image" id="og-image" content="__OG_IMAGE__">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta property="og:locale" id="og-locale" content="__OG_LOCALE__">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" id="twitter-title" content="__SEO_TITLE__">
+    <meta name="twitter:description" id="twitter-description" content="__SEO_DESCRIPTION__">
+    <meta name="twitter:image" id="twitter-image" content="__OG_IMAGE__">
     <link rel="canonical" id="canonical-link" href="__CANONICAL_URL__">
     <link rel="alternate" hreflang="en" id="alt-en" href="__ALT_EN__">
     <link rel="alternate" hreflang="zh-CN" id="alt-zh" href="__ALT_ZH__">
@@ -223,6 +230,9 @@
         .breathe-label { font-size: 13px; color: #94a3b8; }
         .joy-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
         .soft-link-btn { background: rgba(255, 255, 255, 0.56); box-shadow: none; border: 1px solid rgba(226, 232, 240, 0.7); }
+        .share-row { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+        .seo-guide-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; max-width: 860px; padding: 0 24px 32px; box-sizing: border-box; }
+        .seo-guide-links a { color: #94a3b8; text-decoration: none; font-size: 12px; border: 1px solid rgba(226, 232, 240, 0.72); background: rgba(255,255,255,0.46); border-radius: 999px; padding: 7px 11px; }
 
         @media (max-width: 760px) {
             .top-nav { padding: 24px 20px 10px; flex-direction: column; gap: 18px; }
@@ -268,6 +278,13 @@
     </div>
 
     <div class="footer-tips" id="footer-tips">无痕 · 陪伴 · 多语种原生SEO架构支持</div>
+    <nav class="seo-guide-links" id="guide-links" aria-label="OASIS guides">
+        <a href="/oasis/zh/guide/digital-hug">数字拥抱</a>
+        <a href="/oasis/zh/guide/anxiety-breathing">呼吸引导</a>
+        <a href="/oasis/zh/guide/white-noise">白噪音</a>
+        <a href="/oasis/zh/guide/anonymous-venting">匿名解压</a>
+        <a href="/oasis/zh/guide/cozy-web-corner">治愈小角落</a>
+    </nav>
     <div id="audio-host" aria-hidden="true"></div>
 
     <script>
@@ -278,6 +295,7 @@
         var breatheAnimation = null;
         var breathePhaseTimer = null;
         var lastSubmittedJoy = "";
+        var lastHugText = "";
         var lastTrackedPageView = "";
         const soundKeys = ["fire", "cat", "rain", "leaves"];
         const soundSources = {
@@ -289,6 +307,29 @@
         const audioInstances = {};
         const fallbackAudioInstances = {};
         var fallbackAudioContext = null;
+        var guideNav = {
+            zh: [
+                ["digital-hug", "数字拥抱"],
+                ["anxiety-breathing", "呼吸引导"],
+                ["white-noise", "白噪音"],
+                ["anonymous-venting", "匿名解压"],
+                ["cozy-web-corner", "治愈小角落"]
+            ],
+            en: [
+                ["digital-hug", "Digital Hug"],
+                ["anxiety-breathing", "Breathing"],
+                ["white-noise", "White Noise"],
+                ["anonymous-venting", "Private Venting"],
+                ["cozy-web-corner", "Cozy Web Corner"]
+            ],
+            tc: [
+                ["digital-hug", "數位擁抱"],
+                ["anxiety-breathing", "呼吸引導"],
+                ["white-noise", "白噪音"],
+                ["anonymous-venting", "匿名解壓"],
+                ["cozy-web-corner", "治癒小角落"]
+            ]
+        };
 
         var copy = {
             zh: {
@@ -296,6 +337,11 @@
                 ogLocale: "zh_CN",
                 tabs: ["太空降落", "白噪音", "解压池", "交换商店"],
                 footer: "无痕 · 陪伴 · 多语种原生SEO架构支持",
+                share: {
+                    button: "复制这份温柔",
+                    copied: "已复制，可以分享给一个刚好需要的人。",
+                    prefix: "今天给你一个小小的数字拥抱："
+                },
                 seo: {
                     today: ["OASIS 今日拥抱 - 温柔句子和数字避难所", "一个温暖、安静、可匿名使用的治愈小网站，提供数字拥抱、缓解焦虑的温柔句子和轻量情绪陪伴。"],
                     sound: ["OASIS 白噪音呼吸器 - 放松心情与呼吸引导", "在声音绿洲里播放白噪音，并跟随柔和的 4-7-8 呼吸引导放松身心。"],
@@ -349,6 +395,11 @@
                 ogLocale: "en_US",
                 tabs: ["Today's Hug", "White Noise", "Release Pool", "Joy Shop"],
                 footer: "NO ACCOUNT · NO PRESSURE · A SOFT MULTILINGUAL SEO CORNER",
+                share: {
+                    button: "Copy this kindness",
+                    copied: "Copied. Send it to someone who may need a softer minute.",
+                    prefix: "A tiny digital hug for today:"
+                },
                 seo: {
                     today: ["OASIS Today's Hug - Digital sanctuary and kind words", "A warm, quiet digital sanctuary with gentle quotes, anxiety relief micro-moments, and anonymous emotional comfort."],
                     sound: ["OASIS Sound Oasis - White noise and breathing guide", "Play soft white-noise placeholders and follow a calm 4-7-8 breathing guide for a mindful break."],
@@ -402,6 +453,11 @@
                 ogLocale: "zh_HK",
                 tabs: ["太空降落", "白噪音", "解壓池", "交換商店"],
                 footer: "無痕 · 陪伴 · 多語種原生SEO架構支持",
+                share: {
+                    button: "複製這份溫柔",
+                    copied: "已複製，可以分享給一個剛好需要的人。",
+                    prefix: "今天給你一個小小的數位擁抱："
+                },
                 seo: {
                     today: ["OASIS 今日擁抱 - 溫柔句子和數位避難所", "一個溫暖、安靜、可匿名使用的治癒小網站，提供數位擁抱、緩解焦慮的溫柔句子和輕量情緒陪伴。"],
                     sound: ["OASIS 白噪音呼吸器 - 放鬆心情與呼吸引導", "在聲音綠洲裡播放白噪音，並跟隨柔和的 4-7-8 呼吸引導放鬆身心。"],
@@ -565,7 +621,7 @@
         }
 
         function routeUrl(lang, page) {
-            return "/oasis/" + lang + "/" + ROUTES[page] + "?page=" + page;
+            return "/oasis/" + lang + "/" + ROUTES[page];
         }
 
         function readInitialState() {
@@ -591,8 +647,19 @@
                 byId("lang-" + lang).className = lang === state.lang ? "lang-link active" : "lang-link";
             });
             byId("footer-tips").innerText = t.footer;
+            syncGuideLinks();
             document.documentElement.lang = t.langAttr;
             updateSeo();
+        }
+
+        function syncGuideLinks() {
+            var guideLinks = byId("guide-links");
+            if (!guideLinks) {
+                return;
+            }
+            guideLinks.innerHTML = guideNav[state.lang].map(function(item) {
+                return '<a href="/oasis/' + state.lang + '/guide/' + item[0] + '">' + escapeHtml(item[1]) + '</a>';
+            }).join("");
         }
 
         function updateSeo() {
@@ -612,7 +679,11 @@
             setMeta("og-title", "content", title);
             setMeta("og-description", "content", description);
             setMeta("og-url", "content", canonical);
+            setMeta("og-image", "content", getOrigin() + "/oasis/og-image.svg");
             setMeta("og-locale", "content", copy[state.lang].ogLocale);
+            setMeta("twitter-title", "content", title);
+            setMeta("twitter-description", "content", description);
+            setMeta("twitter-image", "content", getOrigin() + "/oasis/og-image.svg");
             setMeta("canonical-link", "href", canonical);
             setMeta("alt-en", "href", getOrigin() + "/oasis/en/" + route);
             setMeta("alt-zh", "href", getOrigin() + "/oasis/zh/" + route);
@@ -741,6 +812,7 @@
             var page = copy[state.lang].pages[1];
             var content = byId("c-content");
             var picked = randomItem(hugs[state.lang]);
+            lastHugText = picked;
             if (event) {
                 popParticles(event);
             }
@@ -750,9 +822,45 @@
                 content.innerHTML =
                     '<p class="desc" style="font-weight:600;color:#475569;">' + escapeHtml(quoteText(picked)) + '</p>' +
                     '<button class="happy-btn" onclick="goToPage(1)">' + escapeHtml(page.again) + '</button>' +
+                    '<div class="share-row"><button class="happy-btn soft-link-btn" onclick="copyCurrentKindness(event)">' + escapeHtml(copy[state.lang].share.button) + '</button></div>' +
                     '<div class="status-line" id="hug-status"></div>';
                 content.style.opacity = "1";
             }, 260);
+        }
+
+        function copyCurrentKindness(event) {
+            var text = lastHugText || randomItem(hugs[state.lang]);
+            var share = copy[state.lang].share;
+            var url = getOrigin() + "/oasis/" + state.lang + "/today";
+            var payload = share.prefix + "\n" + quoteText(text) + "\n" + url;
+            function markCopied() {
+                var status = byId("hug-status");
+                if (status) status.innerText = share.copied;
+                if (event) popParticles(event);
+            }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(payload).then(markCopied).catch(function() {
+                    fallbackCopy(payload);
+                    markCopied();
+                });
+                return;
+            }
+            fallbackCopy(payload);
+            markCopied();
+        }
+
+        function fallbackCopy(text) {
+            var area = document.createElement("textarea");
+            area.value = text;
+            area.setAttribute("readonly", "readonly");
+            area.style.position = "fixed";
+            area.style.left = "-9999px";
+            document.body.appendChild(area);
+            area.select();
+            try {
+                document.execCommand("copy");
+            } catch (error) {}
+            area.remove();
         }
 
         function ensureAudioTags() {
