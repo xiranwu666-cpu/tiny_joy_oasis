@@ -282,11 +282,11 @@
 
     <div class="main-container">
         <div class="dopamine-card" id="core-card">
-            <div class="card-tag" id="c-tag">DIGITAL SANCTUARY</div>
-            <h2 id="c-title">累的时候，来这里停一下。</h2>
+            <div class="card-tag" id="c-tag">TODAY'S HUG</div>
+            <h2 id="c-title">今日份的太空降落</h2>
             <div id="c-content">
-                <p class="desc">OASIS 是一个轻量的数字避难所。点一下，获得一句温柔话；也可以听白噪音，或把不想带走的东西匿名放下。</p>
-                <button class="happy-btn" onclick="triggerHug(event)">给我一句温柔话</button>
+                <p class="desc">这里是你的数字避难所。当你感到疲惫或焦虑时，请轻轻点击下方。每一次触碰，宇宙都会为你掉落一个藏在角落里的温柔秘密。</p>
+                <button class="happy-btn" onclick="triggerHug(event)">接入快乐 (Get a Micro-moment)</button>
             </div>
         </div>
     </div>
@@ -366,13 +366,11 @@
                 },
                 pages: {
                     1: {
-                        tag: "DIGITAL SANCTUARY",
-                        title: "累的时候，来这里停一下。",
-                        desc: "OASIS 是一个轻量的数字避难所。点一下，获得一句温柔话；也可以听白噪音，或把不想带走的东西匿名放下。",
-                        button: "给我一句温柔话",
-                        sound: "听一点白噪音",
-                        vent: "去放下一句话",
-                        again: "再给我一句"
+                        tag: "TODAY'S HUG",
+                        title: "今日份的太空降落",
+                        desc: "这里是你的数字避难所。当你感到疲惫或焦虑时，请轻轻点击下方。每一次触碰，宇宙都会为你掉落一个藏在角落里的温柔秘密。",
+                        button: "接入快乐 (Get a Micro-moment)",
+                        again: "再次降落"
                     },
                     2: {
                         tag: "SOUND OASIS",
@@ -428,13 +426,11 @@
                 },
                 pages: {
                     1: {
-                        tag: "DIGITAL SANCTUARY",
-                        title: "When you are tired, pause here.",
-                        desc: "OASIS is a lightweight digital sanctuary. Tap for one kind sentence, listen to white noise, or privately put down something you do not want to carry.",
-                        button: "Give me a kind sentence",
-                        sound: "Listen to white noise",
-                        vent: "Put down one line",
-                        again: "Give me another"
+                        tag: "TODAY'S HUG",
+                        title: "A soft landing for today",
+                        desc: "This is your digital sanctuary. When you feel tired or anxious, tap gently below. Each touch drops a small hidden kindness from the universe.",
+                        button: "Get a Micro-moment",
+                        again: "Try Again"
                     },
                     2: {
                         tag: "SOUND OASIS",
@@ -490,13 +486,11 @@
                 },
                 pages: {
                     1: {
-                        tag: "DIGITAL SANCTUARY",
-                        title: "累的時候，來這裡停一下。",
-                        desc: "OASIS 是一個輕量的數位避難所。點一下，獲得一句溫柔話；也可以聽白噪音，或把不想帶走的東西匿名放下。",
-                        button: "給我一句溫柔話",
-                        sound: "聽一點白噪音",
-                        vent: "去放下一句話",
-                        again: "再給我一句"
+                        tag: "TODAY'S HUG",
+                        title: "今日份的太空降落",
+                        desc: "這裡是你的數位避難所。當你感到疲憊或焦慮時，請輕輕點擊下方。每一次觸碰，宇宙都會為你掉落一個藏在角落裡的溫柔秘密。",
+                        button: "接入快樂 (Get a Micro-moment)",
+                        again: "再次降落"
                     },
                     2: {
                         tag: "SOUND OASIS",
@@ -817,10 +811,6 @@
             byId("c-content").innerHTML =
                 '<p class="desc">' + escapeHtml(page.desc) + '</p>' +
                 '<button class="happy-btn" onclick="triggerHug(event)">' + escapeHtml(page.button) + '</button>' +
-                '<div class="share-row">' +
-                    '<button class="happy-btn soft-link-btn" onclick="goToPage(2)">' + escapeHtml(page.sound) + '</button>' +
-                    '<button class="happy-btn soft-link-btn" onclick="goToPage(3)">' + escapeHtml(page.vent) + '</button>' +
-                '</div>' +
                 '<div class="status-line" id="hug-status"></div>';
         }
 
