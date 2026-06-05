@@ -25,6 +25,29 @@
     <link rel="alternate" hreflang="zh-Hant" id="alt-tc" href="__ALT_TC__">
     <link rel="alternate" hreflang="x-default" id="alt-default" href="__ALT_DEFAULT__">
     <script type="application/ld+json" id="structured-data">__STRUCTURED_DATA__</script>
+    <script>
+        (function() {
+            var GA_MEASUREMENT_ID = "G-JYE6MFTFTB";
+            var allowedHosts = ["tiny-joy-oasis.vercel.app"];
+            if (allowedHosts.indexOf(window.location.hostname) === -1) {
+                window.oasisAnalyticsReady = false;
+                window.oasisTrack = function() {};
+                return;
+            }
+            window.dataLayer = window.dataLayer || [];
+            window.gtag = function() { window.dataLayer.push(arguments); };
+            window.gtag("js", new Date());
+            window.gtag("config", GA_MEASUREMENT_ID, { send_page_view: false });
+            window.oasisAnalyticsReady = true;
+            window.oasisTrack = function(eventName, params) {
+                window.gtag("event", eventName, params || {});
+            };
+            var script = document.createElement("script");
+            script.async = true;
+            script.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_MEASUREMENT_ID;
+            document.head.appendChild(script);
+        })();
+    </script>
     <style>
         /* 全局治愈系底色：燕麦奶白到清晨薄雾蓝 */
         body {
@@ -750,6 +773,30 @@
                 body: JSON.stringify(payload),
                 keepalive: true
             }).catch(function() {});
+            trackGaPageView(route, path);
+        }
+
+        function trackGaPageView(route, path) {
+            if (!window.oasisAnalyticsReady || typeof window.gtag !== "function") {
+                return;
+            }
+            window.gtag("event", "page_view", {
+                page_title: document.title,
+                page_location: window.location.origin + path,
+                page_path: path,
+                oasis_lang: state.lang,
+                oasis_route: route
+            });
+        }
+
+        function trackGaEvent(eventName, params) {
+            if (!window.oasisAnalyticsReady || typeof window.oasisTrack !== "function") {
+                return;
+            }
+            window.oasisTrack(eventName, Object.assign({
+                oasis_lang: state.lang,
+                oasis_route: ROUTES[state.page]
+            }, params || {}));
         }
 
         function renderPage() {
@@ -814,6 +861,7 @@
             var content = byId("c-content");
             var picked = randomItem(hugs[state.lang]);
             lastHugText = picked;
+            trackGaEvent("hug_generate");
             if (event) {
                 popParticles(event);
             }
@@ -837,6 +885,7 @@
             function markCopied() {
                 var status = byId("hug-status");
                 if (status) status.innerText = share.copied;
+                trackGaEvent("copy_kindness");
                 if (event) popParticles(event);
             }
             if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -916,6 +965,7 @@
             }
             element.classList.add("playing");
             if (status) status.innerText = page.playing;
+            trackGaEvent("sound_play", { sound_key: soundKey });
             primeFallbackAudioContext();
             audio.play().catch(function() {
                 startFallbackSound(soundKey);
@@ -1041,6 +1091,7 @@
             if (!wrap || !circle || !label || !button) {
                 return;
             }
+            trackGaEvent("breathe_start");
             wrap.style.display = "flex";
             button.innerText = page.stop;
             breatheAnimation = circle.animate([
@@ -1119,6 +1170,7 @@
             input.classList.remove("becoming-bubble");
             void input.offsetWidth;
             input.classList.add("becoming-bubble");
+            trackGaEvent("vent_release");
             window.setTimeout(function() {
                 resetVentInput(input);
                 if (button) button.disabled = false;
@@ -1151,6 +1203,7 @@
                 }
                 if (input) input.value = "";
                 if (status) status.innerText = page.saved;
+                trackGaEvent("joy_submit_success");
                 await triggerSwap(null, text);
             } catch (error) {
                 if (input) input.value = "";
