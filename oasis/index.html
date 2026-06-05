@@ -170,7 +170,7 @@
             font-size: 14px; color: #475569; resize: none; margin-bottom: 25px; outline: none;
         }
 
-        /* Optimized Stress-Relief Bubble State */
+        /* Optimized Stress-Relief Release State */
         .vent-input.becoming-bubble {
             display: block !important;
             border-radius: 50% !important;
@@ -186,38 +186,26 @@
             margin: 0 auto 25px auto !important;
             pointer-events: none;
             
-            /* 1.6s longer duration with an elastic, floating cubic-bezier curve */
-            animation: superCozyBubbleFloat 1.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation: gentleSinkRelease 1.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
-        /* Physics-mimicking Keyframes: 
-           Combines squishiness (scaleX/Y), floating weave (translateX), and sudden popping (scale 1.5 + opacity 0)
-        */
-        @keyframes superCozyBubbleFloat {
+        @keyframes gentleSinkRelease {
             0% {
                 transform: scale(1) translateY(0) rotate(0deg);
             }
-            /* Squish and gather upward momentum */
             15% {
-                transform: scaleX(1.2) scaleY(0.8) translateY(-10px) rotate(-5deg);
+                transform: scaleX(1.08) scaleY(0.92) translateY(8px) rotate(-2deg);
             }
-            /* Stretch dynamically as it starts escaping */
             40% {
-                transform: scaleX(0.8) scaleY(1.2) translateX(15px) translateY(-60px) rotate(8deg);
+                transform: scaleX(0.96) scaleY(1.06) translateX(10px) translateY(28px) rotate(3deg);
                 opacity: 1;
             }
-            /* Gentle wobble in mid-air */
             70% {
-                transform: scaleX(1.1) scaleY(0.9) translateX(-15px) translateY(-130px) rotate(-4deg);
-                opacity: 0.8;
-            }
-            /* The satisfying "Pop" expand and dissolve instantly */
-            95% {
-                transform: scale(1.1) translateY(-180px);
-                opacity: 0.3;
+                transform: scaleX(1.02) scaleY(0.98) translateX(-8px) translateY(48px) rotate(-2deg);
+                opacity: 0.58;
             }
             100% {
-                transform: scale(1.6) translateY(-200px);
+                transform: scale(0.72) translateY(72px);
                 opacity: 0;
             }
         }
@@ -257,6 +245,8 @@
         .share-row { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
         .seo-guide-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; max-width: 860px; padding: 0 24px 32px; box-sizing: border-box; }
         .seo-guide-links a { color: #94a3b8; text-decoration: none; font-size: 12px; border: 1px solid rgba(226, 232, 240, 0.72); background: rgba(255,255,255,0.46); border-radius: 999px; padding: 7px 11px; }
+        .privacy-note { max-width: 760px; padding: 0 28px 34px; box-sizing: border-box; color: #94a3b8; font-size: 12px; line-height: 1.8; text-align: center; }
+        .vent-note { padding: 0; margin-top: 16px; }
 
         @media (max-width: 760px) {
             .top-nav { padding: 24px 20px 10px; flex-direction: column; gap: 18px; }
@@ -275,10 +265,10 @@
         <div class="logo">OASIS .</div>
         <div class="nav-right">
             <div class="page-tabs">
-                <button class="tab-btn active" id="btn1" onclick="goToPage(1)">太空降落</button>
+                <button class="tab-btn active" id="btn1" onclick="goToPage(1)">温柔话</button>
                 <button class="tab-btn" id="btn2" onclick="goToPage(2)">白噪音</button>
-                <button class="tab-btn" id="btn3" onclick="goToPage(3)">解压池</button>
-                <button class="tab-btn" id="btn4" onclick="goToPage(4)">交换商店</button>
+                <button class="tab-btn" id="btn3" onclick="goToPage(3)">放下它</button>
+                <button class="tab-btn" id="btn4" onclick="goToPage(4)">交换快乐</button>
             </div>
             <div class="lang-switcher" aria-label="Language switcher">
                 <button class="lang-link" id="lang-en" onclick="switchLang('en')">EN</button>
@@ -292,16 +282,16 @@
 
     <div class="main-container">
         <div class="dopamine-card" id="core-card">
-            <div class="card-tag" id="c-tag">TODAY'S HUG</div>
-            <h2 id="c-title">今日份的太空降落</h2>
+            <div class="card-tag" id="c-tag">DIGITAL SANCTUARY</div>
+            <h2 id="c-title">累的时候，来这里停一下。</h2>
             <div id="c-content">
-                <p class="desc">这里是你的数字避难所。当你感到疲惫或焦虑时，请轻轻点击下方。每一次触碰，宇宙都会为你掉落一个藏在角落里的温柔秘密。</p>
-                <button class="happy-btn" onclick="triggerHug()">接入快乐 (Get a Micro-moment)</button>
+                <p class="desc">OASIS 是一个轻量的数字避难所。点一下，获得一句温柔话；也可以听白噪音，或把不想带走的东西匿名放下。</p>
+                <button class="happy-btn" onclick="triggerHug(event)">给我一句温柔话</button>
             </div>
         </div>
     </div>
 
-    <div class="footer-tips" id="footer-tips">无痕 · 陪伴 · 多语种原生SEO架构支持</div>
+    <div class="footer-tips" id="footer-tips">无账号 · 不评判 · 只停留一小会儿</div>
     <nav class="seo-guide-links" id="guide-links" aria-label="OASIS guides">
         <a href="/oasis/zh/guide/digital-hug">数字拥抱</a>
         <a href="/oasis/zh/guide/anxiety-breathing">呼吸引导</a>
@@ -309,6 +299,7 @@
         <a href="/oasis/zh/guide/anonymous-venting">匿名解压</a>
         <a href="/oasis/zh/guide/cozy-web-corner">治愈小角落</a>
     </nav>
+    <div class="privacy-note" id="privacy-note">OASIS 是轻量情绪陪伴工具，不提供医疗或心理治疗建议。匿名解压内容不会公开展示。如你正处于危机中，请及时联系身边的人或当地专业机构。</div>
     <div id="audio-host" aria-hidden="true"></div>
 
     <script>
@@ -359,26 +350,29 @@
             zh: {
                 langAttr: "zh-CN",
                 ogLocale: "zh_CN",
-                tabs: ["太空降落", "白噪音", "解压池", "交换商店"],
-                footer: "无痕 · 陪伴 · 多语种原生SEO架构支持",
+                tabs: ["温柔话", "白噪音", "放下它", "交换快乐"],
+                footer: "无账号 · 不评判 · 只停留一小会儿",
+                privacy: "OASIS 是轻量情绪陪伴工具，不提供医疗或心理治疗建议。匿名解压内容不会公开展示。如你正处于危机中，请及时联系身边的人或当地专业机构。",
                 share: {
                     button: "复制这份温柔",
                     copied: "已复制，可以分享给一个刚好需要的人。",
                     prefix: "今天给你一个小小的数字拥抱："
                 },
                 seo: {
-                    today: ["OASIS 今日拥抱 - 温柔句子和数字避难所", "一个温暖、安静、可匿名使用的治愈小网站，提供数字拥抱、缓解焦虑的温柔句子和轻量情绪陪伴。"],
+                    today: ["OASIS 数字避难所 - 累的时候停一下", "一个轻量数字避难所：给疲惫、焦虑、睡前和工作间隙的人一句温柔话、白噪音和匿名解压入口。"],
                     sound: ["OASIS 白噪音呼吸器 - 放松心情与呼吸引导", "在声音绿洲里播放白噪音，并跟随柔和的 4-7-8 呼吸引导放松身心。"],
-                    vent: ["OASIS 赛博解压池 - 不保存的私人情绪释放", "写下烦恼并释放，内容只在浏览器里短暂停留，不会保存到后台数据库。"],
+                    vent: ["OASIS 解压池 - 私密放下此刻的重量", "写下一句此刻不想带走的东西，然后把它放下。内容不会公开展示。"],
                     joy: ["OASIS 快乐交换商店 - 匿名交换小开心", "匿名提交一个小小快乐，并从数据库里收到陌生人的幸福瞬间。"]
                 },
                 pages: {
                     1: {
-                        tag: "TODAY'S HUG",
-                        title: "今日份的太空降落",
-                        desc: "这里是你的数字避难所。当你感到疲惫或焦虑时，请轻轻点击下方。每一次触碰，宇宙都会为你掉落一个藏在角落里的温柔秘密。",
-                        button: "接入快乐 (Get a Micro-moment)",
-                        again: "再次降落"
+                        tag: "DIGITAL SANCTUARY",
+                        title: "累的时候，来这里停一下。",
+                        desc: "OASIS 是一个轻量的数字避难所。点一下，获得一句温柔话；也可以听白噪音，或把不想带走的东西匿名放下。",
+                        button: "给我一句温柔话",
+                        sound: "听一点白噪音",
+                        vent: "去放下一句话",
+                        again: "再给我一句"
                     },
                     2: {
                         tag: "SOUND OASIS",
@@ -392,13 +386,14 @@
                         playing: "正在播放占位音频，之后可替换成授权循环白噪音。"
                     },
                     3: {
-                        tag: "CYBER VENT",
-                        title: "赛博解压池",
-                        desc: "写下让你委屈的事情。这里不需要名字，它们会随气泡飘走。",
-                        placeholder: "写下此刻的烦恼...",
-                        button: "揉成气泡，放行它",
-                        empty: "先写点什么吧。",
-                        released: "🫧 烦恼已经揉成气泡，在云端碎掉啦！"
+                        tag: "PRIVATE RELEASE",
+                        title: "把此刻不想带走的东西写下来。",
+                        desc: "写完后，它会慢慢沉入水底。这里不要求你解释，也不要求你变好。",
+                        placeholder: "写下一句话就好...",
+                        button: "放下它",
+                        empty: "先写下一句话吧。",
+                        released: "它已经被放下了。你不需要马上变好。",
+                        note: "这段内容只用于此刻的释放，不会公开展示，也不会进入快乐交换。"
                     },
                     4: {
                         tag: "JOY SWAPPER",
@@ -417,26 +412,29 @@
             en: {
                 langAttr: "en",
                 ogLocale: "en_US",
-                tabs: ["Today's Hug", "White Noise", "Release Pool", "Joy Shop"],
-                footer: "NO ACCOUNT · NO PRESSURE · A SOFT MULTILINGUAL SEO CORNER",
+                tabs: ["Kind Words", "White Noise", "Put It Down", "Joy Swap"],
+                footer: "NO ACCOUNT · NO JUDGMENT · JUST A SMALL PAUSE",
+                privacy: "OASIS is a lightweight emotional companion, not medical care or therapy advice. Private release notes are never shown publicly. If you are in crisis, please contact someone you trust or local professional support.",
                 share: {
                     button: "Copy this kindness",
                     copied: "Copied. Send it to someone who may need a softer minute.",
                     prefix: "A tiny digital hug for today:"
                 },
                 seo: {
-                    today: ["OASIS Today's Hug - Digital sanctuary and kind words", "A warm, quiet digital sanctuary with gentle quotes, anxiety relief micro-moments, and anonymous emotional comfort."],
+                    today: ["OASIS Digital Sanctuary - Pause when you are tired", "A lightweight digital sanctuary for tired, anxious, sleepy, or in-between moments: kind words, white noise, and private release."],
                     sound: ["OASIS Sound Oasis - White noise and breathing guide", "Play soft white-noise placeholders and follow a calm 4-7-8 breathing guide for a mindful break."],
-                    vent: ["OASIS Cyber Vent - Private worry release", "Write a worry and release it in the browser. Nothing is saved to the backend database."],
+                    vent: ["OASIS Release Pool - Privately put down a heavy moment", "Write one thing you do not want to carry and let it go. Private release notes are never shown publicly."],
                     joy: ["OASIS Joy Swapper - Anonymous happy moment exchange", "Submit a tiny happy moment anonymously and receive a stranger's joy from the database."]
                 },
                 pages: {
                     1: {
-                        tag: "TODAY'S HUG",
-                        title: "A soft landing for today",
-                        desc: "This is your digital sanctuary. When you feel tired or anxious, tap gently below. Each touch drops a small hidden kindness from the universe.",
-                        button: "Get a Micro-moment",
-                        again: "Try Again"
+                        tag: "DIGITAL SANCTUARY",
+                        title: "When you are tired, pause here.",
+                        desc: "OASIS is a lightweight digital sanctuary. Tap for one kind sentence, listen to white noise, or privately put down something you do not want to carry.",
+                        button: "Give me a kind sentence",
+                        sound: "Listen to white noise",
+                        vent: "Put down one line",
+                        again: "Give me another"
                     },
                     2: {
                         tag: "SOUND OASIS",
@@ -450,13 +448,14 @@
                         playing: "Playing placeholder audio. Replace it with licensed seamless loops before launch."
                     },
                     3: {
-                        tag: "CYBER VENT",
-                        title: "A private release pool",
-                        desc: "Write what feels heavy. No name is needed here. It will leave like a small bubble.",
-                        placeholder: "Write the worry here...",
-                        button: "Release It",
-                        empty: "Write a little something first.",
-                        released: "🫧 Your worries have turned into bubbles and faded into the clouds!"
+                        tag: "PRIVATE RELEASE",
+                        title: "Write down what you do not want to carry from this moment.",
+                        desc: "After you write it, it will slowly sink. You do not have to explain, and you do not have to feel better right away.",
+                        placeholder: "One sentence is enough...",
+                        button: "Put it down",
+                        empty: "Write one sentence first.",
+                        released: "It has been put down. You do not have to feel better immediately.",
+                        note: "This note is only for this private release. It is never shown publicly and never enters the joy exchange."
                     },
                     4: {
                         tag: "JOY SWAPPER",
@@ -475,26 +474,29 @@
             tc: {
                 langAttr: "zh-Hant",
                 ogLocale: "zh_HK",
-                tabs: ["太空降落", "白噪音", "解壓池", "交換商店"],
-                footer: "無痕 · 陪伴 · 多語種原生SEO架構支持",
+                tabs: ["溫柔話", "白噪音", "放下它", "交換快樂"],
+                footer: "無帳號 · 不評判 · 只停留一小會兒",
+                privacy: "OASIS 是輕量情緒陪伴工具，不提供醫療或心理治療建議。匿名解壓內容不會公開展示。如你正處於危機中，請及時聯繫身邊的人或當地專業機構。",
                 share: {
                     button: "複製這份溫柔",
                     copied: "已複製，可以分享給一個剛好需要的人。",
                     prefix: "今天給你一個小小的數位擁抱："
                 },
                 seo: {
-                    today: ["OASIS 今日擁抱 - 溫柔句子和數位避難所", "一個溫暖、安靜、可匿名使用的治癒小網站，提供數位擁抱、緩解焦慮的溫柔句子和輕量情緒陪伴。"],
+                    today: ["OASIS 數位避難所 - 累的時候停一下", "一個輕量數位避難所：給疲憊、焦慮、睡前和工作間隙的人一句溫柔話、白噪音和匿名解壓入口。"],
                     sound: ["OASIS 白噪音呼吸器 - 放鬆心情與呼吸引導", "在聲音綠洲裡播放白噪音，並跟隨柔和的 4-7-8 呼吸引導放鬆身心。"],
-                    vent: ["OASIS 賽博解壓池 - 不保存的私人情緒釋放", "寫下煩惱並釋放，內容只在瀏覽器裡短暫停留，不會保存到後台資料庫。"],
+                    vent: ["OASIS 解壓池 - 私密放下此刻的重量", "寫下一句此刻不想帶走的東西，然後把它放下。內容不會公開展示。"],
                     joy: ["OASIS 快樂交換商店 - 匿名交換小開心", "匿名提交一個小小快樂，並從資料庫裡收到陌生人的幸福瞬間。"]
                 },
                 pages: {
                     1: {
-                        tag: "TODAY'S HUG",
-                        title: "今日份的太空降落",
-                        desc: "這裡是你的數位避難所。當你感到疲憊或焦慮時，請輕輕點擊下方。每一次觸碰，宇宙都會為你掉落一個藏在角落裡的溫柔秘密。",
-                        button: "接入快樂 (Get a Micro-moment)",
-                        again: "再次降落"
+                        tag: "DIGITAL SANCTUARY",
+                        title: "累的時候，來這裡停一下。",
+                        desc: "OASIS 是一個輕量的數位避難所。點一下，獲得一句溫柔話；也可以聽白噪音，或把不想帶走的東西匿名放下。",
+                        button: "給我一句溫柔話",
+                        sound: "聽一點白噪音",
+                        vent: "去放下一句話",
+                        again: "再給我一句"
                     },
                     2: {
                         tag: "SOUND OASIS",
@@ -508,13 +510,14 @@
                         playing: "正在播放占位音頻，之後可替換成授權循環白噪音。"
                     },
                     3: {
-                        tag: "CYBER VENT",
-                        title: "賽博解壓池",
-                        desc: "寫下讓你委屈的事情。這裡不需要名字，它們會隨氣泡飄走。",
-                        placeholder: "寫下此刻的煩惱...",
-                        button: "揉成氣泡，放行它",
-                        empty: "先寫點什麼吧。",
-                        released: "🫧 煩惱已經揉成氣泡，在雲端碎掉啦！"
+                        tag: "PRIVATE RELEASE",
+                        title: "把此刻不想帶走的東西寫下來。",
+                        desc: "寫完後，它會慢慢沉入水底。這裡不要求你解釋，也不要求你變好。",
+                        placeholder: "寫下一句話就好...",
+                        button: "放下它",
+                        empty: "先寫下一句話吧。",
+                        released: "它已經被放下了。你不需要馬上變好。",
+                        note: "這段內容只用於此刻的釋放，不會公開展示，也不會進入快樂交換。"
                     },
                     4: {
                         tag: "JOY SWAPPER",
@@ -671,6 +674,7 @@
                 byId("lang-" + lang).className = lang === state.lang ? "lang-link active" : "lang-link";
             });
             byId("footer-tips").innerText = t.footer;
+            byId("privacy-note").innerText = t.privacy;
             syncGuideLinks();
             document.documentElement.lang = t.langAttr;
             updateSeo();
@@ -813,6 +817,10 @@
             byId("c-content").innerHTML =
                 '<p class="desc">' + escapeHtml(page.desc) + '</p>' +
                 '<button class="happy-btn" onclick="triggerHug(event)">' + escapeHtml(page.button) + '</button>' +
+                '<div class="share-row">' +
+                    '<button class="happy-btn soft-link-btn" onclick="goToPage(2)">' + escapeHtml(page.sound) + '</button>' +
+                    '<button class="happy-btn soft-link-btn" onclick="goToPage(3)">' + escapeHtml(page.vent) + '</button>' +
+                '</div>' +
                 '<div class="status-line" id="hug-status"></div>';
         }
 
@@ -840,7 +848,8 @@
                 '<p class="desc">' + escapeHtml(page.desc) + '</p>' +
                 '<textarea class="vent-input" id="v-text" placeholder="' + escapeHtml(page.placeholder) + '"></textarea>' +
                 '<button class="happy-btn" onclick="clearVent(event)">' + escapeHtml(page.button) + '</button>' +
-                '<div class="status-line" id="vent-status"></div>';
+                '<div class="status-line" id="vent-status"></div>' +
+                '<div class="privacy-note vent-note">' + escapeHtml(page.note) + '</div>';
         }
 
         function renderJoy(page) {
