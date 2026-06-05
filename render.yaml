@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: oasis-digital-sanctuary
+    env: docker
+    dockerfilePath: ./Dockerfile
+    disks:
+      - name: oasis-data
+        mountPath: /data
+        sizeGB: 1
+    envVars:
+      - key: DB_PATH
+        value: /data/app_data.sqlite
+      - key: PORT
+        value: 8000

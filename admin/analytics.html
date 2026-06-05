@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OASIS Analytics</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #FDFBF7 0%, #F5EFE6 50%, #E6F0FA 100%);
+      color: #334155;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+    }
+    main {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 42px 22px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+    h1 {
+      margin: 0;
+      color: #0f172a;
+      font-size: 24px;
+      font-weight: 500;
+      letter-spacing: 1px;
+    }
+    .panel, .card {
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      border-radius: 18px;
+      box-shadow: 0 24px 58px rgba(148, 163, 184, 0.09);
+      backdrop-filter: blur(18px);
+    }
+    .panel {
+      display: flex;
+      gap: 10px;
+      padding: 12px;
+      margin-bottom: 18px;
+    }
+    input {
+      flex: 1;
+      min-width: 0;
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: #334155;
+      background: rgba(255, 255, 255, 0.72);
+      outline: none;
+    }
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 20px;
+      color: #57534e;
+      font-weight: 600;
+      background: linear-gradient(90deg, #FAD0C4 0%, #FEE180 100%);
+      cursor: pointer;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .card {
+      padding: 18px;
+    }
+    .metric {
+      color: #0f172a;
+      font-size: 30px;
+      margin-top: 8px;
+    }
+    .label {
+      color: #94a3b8;
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th, td {
+      border-bottom: 1px solid rgba(226, 232, 240, 0.75);
+      padding: 12px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      color: #64748b;
+      font-weight: 600;
+    }
+    .muted {
+      color: #94a3b8;
+      font-size: 13px;
+    }
+    @media (max-width: 760px) {
+      header, .panel { flex-direction: column; align-items: stretch; }
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>OASIS Analytics</h1>
+      <div class="muted">Last 7 days · first-party Supabase data</div>
+    </header>
+    <section class="panel">
+      <input id="token" type="password" placeholder="ANALYTICS_ADMIN_TOKEN">
+      <button id="load">Load</button>
+    </section>
+    <section class="grid" id="metrics"></section>
+    <section class="card">
+      <h2>Recent Visits</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Route</th>
+            <th>Lang</th>
+            <th>Device</th>
+            <th>Path</th>
+          </tr>
+        </thead>
+        <tbody id="recent"></tbody>
+      </table>
+    </section>
+  </main>
+  <script>
+    function byId(id) { return document.getElementById(id); }
+    function metric(label, value) {
+      return '<div class="card"><div class="label">' + label + '</div><div class="metric">' + value + '</div></div>';
+    }
+    function topValue(group) {
+      var entries = Object.entries(group || {}).sort(function(a, b) { return b[1] - a[1]; });
+      return entries[0] ? entries[0][0] + ' · ' + entries[0][1] : '-';
+    }
+    async function loadAnalytics() {
+      var token = byId('token').value.trim();
+      var url = '/api/oasis/analytics/summary' + (token ? '?token=' + encodeURIComponent(token) : '');
+      var response = await fetch(url);
+      if (!response.ok) {
+        byId('metrics').innerHTML = metric('Status', response.status);
+        byId('recent').innerHTML = '';
+        return;
+      }
+      var data = await response.json();
+      byId('metrics').innerHTML = [
+        metric('Pageviews', data.pageviews || 0),
+        metric('Unique Paths', data.uniquePaths || 0),
+        metric('Top Route', topValue(data.byRoute)),
+        metric('Top Device', topValue(data.byDevice))
+      ].join('');
+      byId('recent').innerHTML = (data.recent || []).map(function(row) {
+        return '<tr><td>' + new Date(row.created_at).toLocaleString() + '</td><td>' +
+          (row.route || '-') + '</td><td>' + (row.lang || '-') + '</td><td>' +
+          (row.device_type || '-') + '</td><td>' + (row.path || '-') + '</td></tr>';
+      }).join('');
+    }
+    byId('load').addEventListener('click', loadAnalytics);
+  </script>
+</body>
+</html>

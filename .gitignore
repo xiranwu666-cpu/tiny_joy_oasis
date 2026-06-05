@@ -1,0 +1,25 @@
+.DS_Store
+__pycache__/
+*.pyc
+*.pyo
+
+# Local databases and private environment files
+*.sqlite
+*.sqlite3
+*.db
+.env
+.env.*
+!.env.example
+
+# Local tunnel/download artifacts
+bin/
+*.zip
+*.tgz
+
+# Prototype capture and verification artifacts
+prototype-shots/
+prototype-capture.json
+preview-related.js
+verification-*.png
+*preview*.png
+flpak.bin

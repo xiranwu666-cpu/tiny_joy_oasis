@@ -1,0 +1,14 @@
+.DS_Store
+__pycache__/
+*.pyc
+*.pyo
+*.sqlite
+*.db
+*.zip
+*.tgz
+bin/
+prototype-shots/
+verification-*.png
+*preview*.png
+oasis-functional-preview.png
+flpak.bin

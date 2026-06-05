@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="__LANG_ATTR__">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>__SEO_TITLE__</title>
+    <meta name="description" id="seo-description" content="__SEO_DESCRIPTION__">
+    <meta name="keywords" id="seo-keywords" content="__SEO_KEYWORDS__">
+    <meta property="og:title" id="og-title" content="__SEO_TITLE__">
+    <meta property="og:description" id="og-description" content="__SEO_DESCRIPTION__">
+    <meta property="og:type" content="website">
+    <meta property="og:url" id="og-url" content="__CANONICAL_URL__">
+    <meta property="og:locale" id="og-locale" content="__OG_LOCALE__">
+    <link rel="canonical" id="canonical-link" href="__CANONICAL_URL__">
+    <link rel="alternate" hreflang="en" id="alt-en" href="__ALT_EN__">
+    <link rel="alternate" hreflang="zh-CN" id="alt-zh" href="__ALT_ZH__">
+    <link rel="alternate" hreflang="zh-Hant" id="alt-tc" href="__ALT_TC__">
+    <link rel="alternate" hreflang="x-default" id="alt-default" href="__ALT_DEFAULT__">
+    <script type="application/ld+json" id="structured-data">__STRUCTURED_DATA__</script>
+    <style>
+        /* 全局治愈系底色：燕麦奶白到清晨薄雾蓝 */
+        body {
+            background: linear-gradient(135deg, #FDFBF7 0%, #F5EFE6 50%, #E6F0FA 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+            color: #475569;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* 顶部导航 */
+        .top-nav {
+            width: 100%;
+            max-width: 1200px;
+            padding: 30px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+        }
+        .logo {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+            letter-spacing: 2px;
+        }
+        .page-tabs {
+            display: flex;
+            gap: 15px;
+        }
+        .tab-btn {
+            font-size: 14px;
+            color: #94a3b8;
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        /* 激活状态：淡淡的粉色背景，绝对不会看错 */
+        .tab-btn.active {
+            color: #475569;
+            font-weight: 600;
+            background: #FFF1F2;
+        }
+
+        /* 核心卡片容器 */
+        .main-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .dopamine-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 45px 35px;
+            max-width: 560px;
+            width: 100%;
+            box-shadow: 0 30px 60px rgba(148, 163, 184, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .card-tag {
+            display: inline-block;
+            font-size: 12px;
+            background: #FFF1F2;
+            color: #FDA4AF;
+            padding: 6px 16px;
+            border-radius: 50px;
+            margin-bottom: 25px;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+        h2 {
+            font-size: 24px;
+            color: #1e293b;
+            margin: 0 0 15px 0;
+            font-weight: 400;
+        }
+        p.desc {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #64748b;
+            margin: 0 0 35px 0;
+        }
+
+        /* 各页面组件 */
+        .sound-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 30px; }
+        .sound-item {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(226, 232, 240, 0.6);
+            padding: 18px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .sound-item.playing {
+            background: #FFFBEB;
+            border-color: #FCD34D;
+        }
+
+        .vent-input {
+            width: 100%; height: 110px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 14px; padding: 15px; box-sizing: border-box;
+            font-size: 14px; color: #475569; resize: none; margin-bottom: 25px; outline: none;
+        }
+
+        /* Optimized Stress-Relief Bubble State */
+        .vent-input.becoming-bubble {
+            display: block !important;
+            border-radius: 50% !important;
+            width: 100px !important;
+            height: 100px !important;
+            padding: 0 !important;
+            color: transparent !important; /* Instantly hide text */
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.9) 0%, rgba(250, 208, 196, 0.4) 50%, rgba(230, 240, 250, 0.6) 100%) !important;
+            border: 2px solid rgba(254, 225, 128, 0.6) !important;
+            box-shadow: 0 20px 40px rgba(148, 163, 184, 0.15), 
+                        inset -10px -10px 25px rgba(230, 240, 250, 0.5), 
+                        inset 10px 10px 25px rgba(255, 255, 255, 0.8) !important;
+            margin: 0 auto 25px auto !important;
+            pointer-events: none;
+            
+            /* 1.6s longer duration with an elastic, floating cubic-bezier curve */
+            animation: superCozyBubbleFloat 1.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        /* Physics-mimicking Keyframes: 
+           Combines squishiness (scaleX/Y), floating weave (translateX), and sudden popping (scale 1.5 + opacity 0)
+        */
+        @keyframes superCozyBubbleFloat {
+            0% {
+                transform: scale(1) translateY(0) rotate(0deg);
+            }
+            /* Squish and gather upward momentum */
+            15% {
+                transform: scaleX(1.2) scaleY(0.8) translateY(-10px) rotate(-5deg);
+            }
+            /* Stretch dynamically as it starts escaping */
+            40% {
+                transform: scaleX(0.8) scaleY(1.2) translateX(15px) translateY(-60px) rotate(8deg);
+                opacity: 1;
+            }
+            /* Gentle wobble in mid-air */
+            70% {
+                transform: scaleX(1.1) scaleY(0.9) translateX(-15px) translateY(-130px) rotate(-4deg);
+                opacity: 0.8;
+            }
+            /* The satisfying "Pop" expand and dissolve instantly */
+            95% {
+                transform: scale(1.1) translateY(-180px);
+                opacity: 0.3;
+            }
+            100% {
+                transform: scale(1.6) translateY(-200px);
+                opacity: 0;
+            }
+        }
+
+        .joy-box {
+            background: linear-gradient(135deg, #FFF9F8 0%, #FFFDF5 100%);
+            border: 1px dashed #FAD0C4;
+            padding: 22px; border-radius: 16px; margin-bottom: 25px;
+            text-align: left; font-style: italic; font-size: 15px; line-height: 1.8; color: #57534e;
+        }
+
+        /* 多巴胺呼吸按钮 */
+        .happy-btn {
+            background: linear-gradient(90deg, #FAD0C4 0%, #FEE180 100%);
+            border: none;
+            padding: 14px 32px;
+            border-radius: 50px;
+            font-size: 15px;
+            color: #57534e;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(250, 208, 196, 0.4);
+        }
+
+        .footer-tips { padding: 30px; font-size: 12px; color: #94a3b8; }
+
+        .nav-right { display: flex; align-items: center; gap: 22px; }
+        .lang-switcher { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #94a3b8; }
+        .lang-link { border: 0; background: none; color: #94a3b8; cursor: pointer; padding: 4px 0; }
+        .lang-link.active { color: #475569; font-weight: 600; }
+        .status-line { min-height: 20px; margin-top: 18px; font-size: 13px; line-height: 1.6; color: #94a3b8; }
+        .breathe-wrap { display: none; justify-content: center; align-items: center; flex-direction: column; gap: 12px; margin: 4px 0 28px; }
+        .breathe-circle { width: 90px; height: 90px; border-radius: 50%; background: radial-gradient(circle, #FAD0C4 0%, #FEE180 72%); opacity: 0.62; box-shadow: 0 18px 45px rgba(250, 208, 196, 0.3); }
+        .breathe-label { font-size: 13px; color: #94a3b8; }
+        .joy-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+        .soft-link-btn { background: rgba(255, 255, 255, 0.56); box-shadow: none; border: 1px solid rgba(226, 232, 240, 0.7); }
+
+        @media (max-width: 760px) {
+            .top-nav { padding: 24px 20px 10px; flex-direction: column; gap: 18px; }
+            .nav-right { width: 100%; flex-direction: column; gap: 12px; }
+            .page-tabs { width: 100%; justify-content: center; flex-wrap: wrap; gap: 8px; }
+            .tab-btn { padding: 7px 10px; }
+            .main-container { align-items: flex-start; padding: 18px; }
+            .dopamine-card { padding: 38px 24px; border-radius: 26px; }
+            .sound-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-nav">
+        <div class="logo">OASIS .</div>
+        <div class="nav-right">
+            <div class="page-tabs">
+                <button class="tab-btn active" id="btn1" onclick="goToPage(1)">太空降落</button>
+                <button class="tab-btn" id="btn2" onclick="goToPage(2)">白噪音</button>
+                <button class="tab-btn" id="btn3" onclick="goToPage(3)">解压池</button>
+                <button class="tab-btn" id="btn4" onclick="goToPage(4)">交换商店</button>
+            </div>
+            <div class="lang-switcher" aria-label="Language switcher">
+                <button class="lang-link" id="lang-en" onclick="switchLang('en')">EN</button>
+                <span>|</span>
+                <button class="lang-link active" id="lang-zh" onclick="switchLang('zh')">简</button>
+                <span>|</span>
+                <button class="lang-link" id="lang-tc" onclick="switchLang('tc')">繁</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="dopamine-card" id="core-card">
+            <div class="card-tag" id="c-tag">TODAY'S HUG</div>
+            <h2 id="c-title">今日份的太空降落</h2>
+            <div id="c-content">
+                <p class="desc">这里是你的数字避难所。当你感到疲惫或焦虑时，请轻轻点击下方。每一次触碰，宇宙都会为你掉落一个藏在角落里的温柔秘密。</p>
+                <button class="happy-btn" onclick="triggerHug()">接入快乐 (Get a Micro-moment)</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-tips" id="footer-tips">无痕 · 陪伴 · 多语种原生SEO架构支持</div>
+    <div id="audio-host" aria-hidden="true"></div>
+
+    <script>
+        var ROUTES = { 1: "today", 2: "sound", 3: "vent", 4: "joy" };
+        var PAGE_BY_ROUTE = { today: 1, sound: 2, vent: 3, joy: 4 };
+        var VALID_LANGS = { en: true, zh: true, tc: true };
+        var state = { lang: "zh", page: 1 };
+        var breatheAnimation = null;
+        var breathePhaseTimer = null;
+        var lastSubmittedJoy = "";
+        var lastTrackedPageView = "";
+        const soundKeys = ["fire", "cat", "rain", "leaves"];
+        const soundSources = {
+            fire: "/api/oasis/audio/fire",
+            cat: "/api/oasis/audio/cat",
+            rain: "/api/oasis/audio/rain",
+            leaves: "/api/oasis/audio/leaves"
+        };
+        const audioInstances = {};
+        const fallbackAudioInstances = {};
+        var fallbackAudioContext = null;
+
+        var copy = {
+            zh: {
+                langAttr: "zh-CN",
+                ogLocale: "zh_CN",
+                tabs: ["太空降落", "白噪音", "解压池", "交换商店"],
+                footer: "无痕 · 陪伴 · 多语种原生SEO架构支持",
+                seo: {
+                    today: ["OASIS 今日拥抱 - 温柔句子和数字避难所", "一个温暖、安静、可匿名使用的治愈小网站，提供数字拥抱、缓解焦虑的温柔句子和轻量情绪陪伴。"],
+                    sound: ["OASIS 白噪音呼吸器 - 放松心情与呼吸引导", "在声音绿洲里播放白噪音，并跟随柔和的 4-7-8 呼吸引导放松身心。"],
+                    vent: ["OASIS 赛博解压池 - 不保存的私人情绪释放", "写下烦恼并释放，内容只在浏览器里短暂停留，不会保存到后台数据库。"],
+                    joy: ["OASIS 快乐交换商店 - 匿名交换小开心", "匿名提交一个小小快乐，并从数据库里收到陌生人的幸福瞬间。"]
+                },
+                pages: {
+                    1: {
+                        tag: "TODAY'S HUG",
+                        title: "今日份的太空降落",
+                        desc: "这里是你的数字避难所。当你感到疲惫或焦虑时，请轻轻点击下方。每一次触碰，宇宙都会为你掉落一个藏在角落里的温柔秘密。",
+                        button: "接入快乐 (Get a Micro-moment)",
+                        again: "再次降落"
+                    },
+                    2: {
+                        tag: "SOUND OASIS",
+                        title: "白噪音呼吸器",
+                        desc: "选择一个最让你放松的频率，闭上眼睛深呼吸。",
+                        start: "开启沉浸呼吸",
+                        stop: "暂停呼吸",
+                        phases: ["吸气 4 秒", "停留 7 秒", "呼气 8 秒"],
+                        sounds: ["🔥 柴火燃烧声", "🐱 猫咪呼噜声", "🌧️ 屋檐小雨声", "🍂 踩碎枯叶声"],
+                        ready: "选择一个声音，或者先跟随呼吸圆点慢下来。",
+                        playing: "正在播放占位音频，之后可替换成授权循环白噪音。"
+                    },
+                    3: {
+                        tag: "CYBER VENT",
+                        title: "赛博解压池",
+                        desc: "写下让你委屈的事情。这里不需要名字，它们会随气泡飘走。",
+                        placeholder: "写下此刻的烦恼...",
+                        button: "揉成气泡，放行它",
+                        empty: "先写点什么吧。",
+                        released: "🫧 烦恼已经揉成气泡，在云端碎掉啦！"
+                    },
+                    4: {
+                        tag: "JOY SWAPPER",
+                        title: "快乐交换商店",
+                        desc: "拿走陌生人的幸福瞬间，也留下你今天的一点美好。",
+                        placeholder: "写下今天一个很小但真实的开心...",
+                        submit: "提交并交换",
+                        shuffle: "再摇一个快乐",
+                        empty: "写 3 到 220 个字就可以交换。",
+                        saving: "正在把这点开心轻轻放进数据库...",
+                        saved: "已匿名保存。正在为你取回另一个快乐。",
+                        failed: "后台暂时没接上，先从本地温柔池里给你拿一个。"
+                    }
+                }
+            },
+            en: {
+                langAttr: "en",
+                ogLocale: "en_US",
+                tabs: ["Today's Hug", "White Noise", "Release Pool", "Joy Shop"],
+                footer: "NO ACCOUNT · NO PRESSURE · A SOFT MULTILINGUAL SEO CORNER",
+                seo: {
+                    today: ["OASIS Today's Hug - Digital sanctuary and kind words", "A warm, quiet digital sanctuary with gentle quotes, anxiety relief micro-moments, and anonymous emotional comfort."],
+                    sound: ["OASIS Sound Oasis - White noise and breathing guide", "Play soft white-noise placeholders and follow a calm 4-7-8 breathing guide for a mindful break."],
+                    vent: ["OASIS Cyber Vent - Private worry release", "Write a worry and release it in the browser. Nothing is saved to the backend database."],
+                    joy: ["OASIS Joy Swapper - Anonymous happy moment exchange", "Submit a tiny happy moment anonymously and receive a stranger's joy from the database."]
+                },
+                pages: {
+                    1: {
+                        tag: "TODAY'S HUG",
+                        title: "A soft landing for today",
+                        desc: "This is your digital sanctuary. When you feel tired or anxious, tap gently below. Each touch drops a small hidden kindness from the universe.",
+                        button: "Get a Micro-moment",
+                        again: "Try Again"
+                    },
+                    2: {
+                        tag: "SOUND OASIS",
+                        title: "White-noise breathing room",
+                        desc: "Choose the texture that relaxes you most, then let the breathing circle slow the room down.",
+                        start: "Start Breathe",
+                        stop: "Pause Breathe",
+                        phases: ["Inhale 4s", "Hold 7s", "Exhale 8s"],
+                        sounds: ["🔥 Woodfire", "🐱 Cat Purr", "🌧️ Soft Rain", "🍂 Autumn Leaves"],
+                        ready: "Choose a sound, or begin with the breathing circle.",
+                        playing: "Playing placeholder audio. Replace it with licensed seamless loops before launch."
+                    },
+                    3: {
+                        tag: "CYBER VENT",
+                        title: "A private release pool",
+                        desc: "Write what feels heavy. No name is needed here. It will leave like a small bubble.",
+                        placeholder: "Write the worry here...",
+                        button: "Release It",
+                        empty: "Write a little something first.",
+                        released: "🫧 Your worries have turned into bubbles and faded into the clouds!"
+                    },
+                    4: {
+                        tag: "JOY SWAPPER",
+                        title: "Trade one tiny joy",
+                        desc: "Take a stranger's happy moment, and leave a small good thing from your day.",
+                        placeholder: "A tiny, real happy thing from today...",
+                        submit: "Submit & Swap",
+                        shuffle: "Another Joy",
+                        empty: "Write 3 to 220 characters to swap.",
+                        saving: "Saving this tiny joy anonymously...",
+                        saved: "Saved anonymously. Fetching another joy for you.",
+                        failed: "The backend is taking a breath, so here is one from the local pool."
+                    }
+                }
+            },
+            tc: {
+                langAttr: "zh-Hant",
+                ogLocale: "zh_HK",
+                tabs: ["太空降落", "白噪音", "解壓池", "交換商店"],
+                footer: "無痕 · 陪伴 · 多語種原生SEO架構支持",
+                seo: {
+                    today: ["OASIS 今日擁抱 - 溫柔句子和數位避難所", "一個溫暖、安靜、可匿名使用的治癒小網站，提供數位擁抱、緩解焦慮的溫柔句子和輕量情緒陪伴。"],
+                    sound: ["OASIS 白噪音呼吸器 - 放鬆心情與呼吸引導", "在聲音綠洲裡播放白噪音，並跟隨柔和的 4-7-8 呼吸引導放鬆身心。"],
+                    vent: ["OASIS 賽博解壓池 - 不保存的私人情緒釋放", "寫下煩惱並釋放，內容只在瀏覽器裡短暫停留，不會保存到後台資料庫。"],
+                    joy: ["OASIS 快樂交換商店 - 匿名交換小開心", "匿名提交一個小小快樂，並從資料庫裡收到陌生人的幸福瞬間。"]
+                },
+                pages: {
+                    1: {
+                        tag: "TODAY'S HUG",
+                        title: "今日份的太空降落",
+                        desc: "這裡是你的數位避難所。當你感到疲憊或焦慮時，請輕輕點擊下方。每一次觸碰，宇宙都會為你掉落一個藏在角落裡的溫柔秘密。",
+                        button: "接入快樂 (Get a Micro-moment)",
+                        again: "再次降落"
+                    },
+                    2: {
+                        tag: "SOUND OASIS",
+                        title: "白噪音呼吸器",
+                        desc: "選擇一個最讓你放鬆的頻率，閉上眼睛深呼吸。",
+                        start: "開啟沉浸呼吸",
+                        stop: "暫停呼吸",
+                        phases: ["吸氣 4 秒", "停留 7 秒", "呼氣 8 秒"],
+                        sounds: ["🔥 柴火燃燒聲", "🐱 貓咪呼嚕聲", "🌧️ 屋簷小雨聲", "🍂 踩碎枯葉聲"],
+                        ready: "選擇一個聲音，或者先跟隨呼吸圓點慢下來。",
+                        playing: "正在播放占位音頻，之後可替換成授權循環白噪音。"
+                    },
+                    3: {
+                        tag: "CYBER VENT",
+                        title: "賽博解壓池",
+                        desc: "寫下讓你委屈的事情。這裡不需要名字，它們會隨氣泡飄走。",
+                        placeholder: "寫下此刻的煩惱...",
+                        button: "揉成氣泡，放行它",
+                        empty: "先寫點什麼吧。",
+                        released: "🫧 煩惱已經揉成氣泡，在雲端碎掉啦！"
+                    },
+                    4: {
+                        tag: "JOY SWAPPER",
+                        title: "快樂交換商店",
+                        desc: "拿走陌生人的幸福瞬間，也留下你今天的一點美好。",
+                        placeholder: "寫下今天一個很小但真實的開心...",
+                        submit: "提交並交換",
+                        shuffle: "再搖一個快樂",
+                        empty: "寫 3 到 220 個字就可以交換。",
+                        saving: "正在把這點開心輕輕放進資料庫...",
+                        saved: "已匿名保存。正在為你取回另一個快樂。",
+                        failed: "後台暫時沒接上，先從本地溫柔池裡給你拿一個。"
+                    }
+                }
+            }
+        };
+
+        var hugs = {
+            zh: [
+                "辛苦啦。今天你已经表现得很好了，可以先换个舒服的姿势。",
+                "你不用在喝水前解决整个人生，先把杯子拿起来就好。",
+                "如果今天只完成了一点点，那一点点也是真实的前进。",
+                "允许自己慢一点。不是所有花都在同一阵风里开放。",
+                "你现在不需要证明什么，先把呼吸放轻。",
+                "有些日子的治愈，只是看见桌上的光。",
+                "你可以还没有完成，也依然值得被好好照顾。",
+                "先让下一次呼吸，撑过下一分钟。",
+                "柔软也是一种很聪明的力量。",
+                "今天的你不需要完美，只需要被温柔地接住。",
+                "把肩膀放下来一点点，世界可以晚几秒再处理。",
+                "你已经走到这里了，这本身就很了不起。"
+            ],
+            en: [
+                "You have done enough for this minute. Let your shoulders drop a little.",
+                "You do not have to solve your whole life before drinking water.",
+                "A small step still counts when it is taken by a tired person.",
+                "You are allowed to be unfinished and still deeply worthy of care.",
+                "Let the next breath be enough for the next minute.",
+                "Some days healing is only noticing the light on the table.",
+                "Softness is also a form of intelligence.",
+                "Rest is not a reward for being perfect. It is part of staying alive.",
+                "Nothing needs to be impressive right now. Just be here.",
+                "Your nervous system is allowed to ask for gentleness.",
+                "Put one hand near your heart. You are not late to your own life.",
+                "Today can be smaller than planned and still be real."
+            ],
+            tc: [
+                "辛苦啦。今天你已經表現得很好了，可以先換個舒服的姿勢。",
+                "你不用在喝水前解決整個人生，先把杯子拿起來就好。",
+                "如果今天只完成了一點點，那一點點也是真實的前進。",
+                "允許自己慢一點。不是所有花都在同一陣風裡開放。",
+                "你現在不需要證明什麼，先把呼吸放輕。",
+                "有些日子的治癒，只是看見桌上的光。",
+                "你可以還沒有完成，也依然值得被好好照顧。",
+                "先讓下一次呼吸，撐過下一分鐘。",
+                "柔軟也是一種很聰明的力量。",
+                "今天的你不需要完美，只需要被溫柔地接住。",
+                "把肩膀放下來一點點，世界可以晚幾秒再處理。",
+                "你已經走到這裡了，這本身就很了不起。"
+            ]
+        };
+
+        var joyFallbacks = {
+            zh: [
+                "今天下班过马路的时候，刚好踩在了绿灯亮起的最后一秒，风里有栀子花的味道。",
+                "便利店阿姨把最后一只热饭团留给了我。",
+                "早上出门忘带伞，雨停在我走出楼门之前。",
+                "有人很认真地听我把一句话说完。",
+                "午后的光落在杯子边缘，看起来像一个小小的奖励。",
+                "洗完的床单晒出太阳味，晚上躺进去的一瞬间很幸福。",
+                "电梯门快关上时，有人帮我按住了开门键。",
+                "今天的第一口茶刚好是最舒服的温度。",
+                "路过面包店时，刚好闻到热面包出炉。",
+                "朋友发来一句没头没尾的笑话，但我真的笑了。",
+                "排队时前面的人转身提醒我鞋带散了。",
+                "晚风很轻，刚好把一天吹松了一点。"
+            ],
+            en: [
+                "The first sip of tea was exactly the right temperature.",
+                "A stranger held the door and smiled like they had all the time in the world.",
+                "A patch of sunlight landed on my notebook and stayed there.",
+                "The rain stopped exactly when I reached the sidewalk.",
+                "Someone sent me a song and said it reminded them of me.",
+                "I found a clean spoon right when I wanted cereal.",
+                "The elevator arrived before I could even press the button twice.",
+                "My laundry came out warm and smelled like a quiet evening.",
+                "A barista remembered my order and drew a tiny star on the cup.",
+                "I finished one small task that had been sitting in my mind all week.",
+                "The sky turned peach for three minutes on the way home.",
+                "I heard a laugh from another room and it made the apartment feel softer."
+            ],
+            tc: [
+                "今天下班過馬路的時候，剛好踩在了綠燈亮起的最後一秒，風裡有梔子花的味道。",
+                "便利店阿姨把最後一隻熱飯糰留給了我。",
+                "早上出門忘帶傘，雨停在我走出樓門之前。",
+                "有人很認真地聽我把一句話說完。",
+                "午後的光落在杯子邊緣，看起來像一個小小的獎勵。",
+                "洗完的床單曬出太陽味，晚上躺進去的一瞬間很幸福。",
+                "電梯門快關上時，有人幫我按住了開門鍵。",
+                "今天的第一口茶剛好是最舒服的溫度。",
+                "路過麵包店時，剛好聞到熱麵包出爐。",
+                "朋友傳來一句沒頭沒尾的笑話，但我真的笑了。",
+                "排隊時前面的人轉身提醒我鞋帶散了。",
+                "晚風很輕，剛好把一天吹鬆了一點。"
+            ]
+        };
+
+        function byId(id) {
+            return document.getElementById(id);
+        }
+
+        function escapeHtml(value) {
+            return String(value).replace(/[&<>"']/g, function(char) {
+                return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[char];
+            });
+        }
+
+        function randomItem(items) {
+            return items[Math.floor(Math.random() * items.length)];
+        }
+
+        function quoteText(text) {
+            return state.lang === "en" ? "“" + text + "”" : "“" + text + "”";
+        }
+
+        function getOrigin() {
+            return window.location.origin || "";
+        }
+
+        function routeUrl(lang, page) {
+            return "/oasis/" + lang + "/" + ROUTES[page] + "?page=" + page;
+        }
+
+        function readInitialState() {
+            var params = new URLSearchParams(window.location.search);
+            var pathParts = window.location.pathname.split("/").filter(Boolean);
+            var pathLang = pathParts[1];
+            var pathRoute = pathParts[2];
+            var queryLang = params.get("lang");
+            var queryPage = parseInt(params.get("page") || "", 10);
+            state.lang = VALID_LANGS[queryLang] ? queryLang : (VALID_LANGS[pathLang] ? pathLang : "zh");
+            state.page = PAGE_BY_ROUTE[pathRoute] || (PAGE_BY_ROUTE[params.get("route")] || (ROUTES[queryPage] ? queryPage : 1));
+        }
+
+        function syncShell() {
+            var t = copy[state.lang];
+            for (var i = 1; i <= 4; i += 1) {
+                var button = byId("btn" + i);
+                button.className = i === state.page ? "tab-btn active" : "tab-btn";
+                button.innerText = t.tabs[i - 1];
+                button.setAttribute("aria-current", i === state.page ? "page" : "false");
+            }
+            ["en", "zh", "tc"].forEach(function(lang) {
+                byId("lang-" + lang).className = lang === state.lang ? "lang-link active" : "lang-link";
+            });
+            byId("footer-tips").innerText = t.footer;
+            document.documentElement.lang = t.langAttr;
+            updateSeo();
+        }
+
+        function updateSeo() {
+            var route = ROUTES[state.page];
+            var seo = copy[state.lang].seo[route];
+            var title = seo[0];
+            var description = seo[1];
+            var canonical = getOrigin() + "/oasis/" + state.lang + "/" + route;
+            var keywords = {
+                en: "digital sanctuary, anxiety relief website, cozy web corner, digital hug, white noise breathing, anonymous joy exchange, OASIS",
+                zh: "治愈小网站, 放松心情, 缓解焦虑, 数字拥抱, 白噪音呼吸, 匿名快乐交换, OASIS",
+                tc: "治癒小網站, 放鬆心情, 緩解焦慮, 數位擁抱, 白噪音呼吸, 匿名快樂交換, OASIS"
+            }[state.lang];
+            document.title = title;
+            setMeta("seo-description", "content", description);
+            setMeta("seo-keywords", "content", keywords);
+            setMeta("og-title", "content", title);
+            setMeta("og-description", "content", description);
+            setMeta("og-url", "content", canonical);
+            setMeta("og-locale", "content", copy[state.lang].ogLocale);
+            setMeta("canonical-link", "href", canonical);
+            setMeta("alt-en", "href", getOrigin() + "/oasis/en/" + route);
+            setMeta("alt-zh", "href", getOrigin() + "/oasis/zh/" + route);
+            setMeta("alt-tc", "href", getOrigin() + "/oasis/tc/" + route);
+            setMeta("alt-default", "href", getOrigin() + "/oasis/en/" + route);
+        }
+
+        function setMeta(id, attr, value) {
+            var element = byId(id);
+            if (element) {
+                element.setAttribute(attr, value);
+            }
+        }
+
+        function goToPage(pageNum, skipHistory) {
+            if (!ROUTES[pageNum]) {
+                pageNum = 1;
+            }
+            if (state.page !== pageNum) {
+                stopAllAudio();
+                stopBreathing();
+            }
+            state.page = pageNum;
+            syncShell();
+            renderPage();
+            if (!skipHistory) {
+                window.history.pushState(null, "", routeUrl(state.lang, state.page));
+            }
+            trackPageView();
+        }
+
+        function switchLang(lang) {
+            if (!VALID_LANGS[lang]) {
+                return;
+            }
+            state.lang = lang;
+            stopAllAudio();
+            stopBreathing();
+            syncShell();
+            renderPage();
+            window.history.pushState(null, "", routeUrl(state.lang, state.page));
+            trackPageView();
+        }
+
+        function trackPageView() {
+            var route = ROUTES[state.page];
+            var path = window.location.pathname + window.location.search;
+            var dedupeKey = state.lang + "|" + route + "|" + path;
+            if (dedupeKey === lastTrackedPageView) {
+                return;
+            }
+            lastTrackedPageView = dedupeKey;
+            var payload = {
+                lang: state.lang,
+                route: route,
+                path: path,
+                referrer: document.referrer || "",
+                title: document.title
+            };
+            fetch("/api/oasis/analytics/pageview", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+                keepalive: true
+            }).catch(function() {});
+        }
+
+        function renderPage() {
+            var page = copy[state.lang].pages[state.page];
+            byId("c-tag").innerText = page.tag;
+            byId("c-title").innerText = page.title;
+            if (state.page === 1) renderToday(page);
+            if (state.page === 2) renderSound(page);
+            if (state.page === 3) renderVent(page);
+            if (state.page === 4) renderJoy(page);
+        }
+
+        function renderToday(page) {
+            byId("c-content").innerHTML =
+                '<p class="desc">' + escapeHtml(page.desc) + '</p>' +
+                '<button class="happy-btn" onclick="triggerHug(event)">' + escapeHtml(page.button) + '</button>' +
+                '<div class="status-line" id="hug-status"></div>';
+        }
+
+        function renderSound(page) {
+            byId("c-content").innerHTML =
+                '<p class="desc">' + escapeHtml(page.desc) + '</p>' +
+                '<div class="sound-grid">' +
+                    page.sounds.map(function(label, index) {
+                        var soundKey = soundKeys[index];
+                        var isPlaying = audioInstances[soundKey] && !audioInstances[soundKey].paused;
+                        return '<div class="sound-item' + (isPlaying ? ' playing' : '') + '" id="sound-' + soundKey + '" data-sound="' + soundKey + '" role="button" tabindex="0" onclick="toggleSound(\'' + soundKey + '\', this)" onkeydown="soundKey(event, \'' + soundKey + '\', this)">' + escapeHtml(label) + '</div>';
+                    }).join("") +
+                '</div>' +
+                '<div class="breathe-wrap" id="breathe-wrap">' +
+                    '<div class="breathe-circle" id="breathe-circle"></div>' +
+                    '<div class="breathe-label" id="breathe-label">' + escapeHtml(page.phases[0]) + '</div>' +
+                '</div>' +
+                '<button class="happy-btn" id="breathe-btn" onclick="toggleBreathing()">' + escapeHtml(page.start) + '</button>' +
+                '<div class="status-line" id="sound-status">' + escapeHtml(page.ready) + '</div>';
+            ensureAudioTags();
+        }
+
+        function renderVent(page) {
+            byId("c-content").innerHTML =
+                '<p class="desc">' + escapeHtml(page.desc) + '</p>' +
+                '<textarea class="vent-input" id="v-text" placeholder="' + escapeHtml(page.placeholder) + '"></textarea>' +
+                '<button class="happy-btn" onclick="clearVent(event)">' + escapeHtml(page.button) + '</button>' +
+                '<div class="status-line" id="vent-status"></div>';
+        }
+
+        function renderJoy(page) {
+            byId("c-content").innerHTML =
+                '<p class="desc">' + escapeHtml(page.desc) + '</p>' +
+                '<div class="joy-box" id="j-box">' + escapeHtml(quoteText(randomItem(joyFallbacks[state.lang]))) + '</div>' +
+                '<textarea class="vent-input" id="joy-text" maxlength="220" placeholder="' + escapeHtml(page.placeholder) + '"></textarea>' +
+                '<div class="joy-actions">' +
+                    '<button class="happy-btn" onclick="submitJoy(event)">' + escapeHtml(page.submit) + '</button>' +
+                    '<button class="happy-btn soft-link-btn" onclick="triggerSwap(event)">' + escapeHtml(page.shuffle) + '</button>' +
+                '</div>' +
+                '<div class="status-line" id="joy-status"></div>';
+            triggerSwap();
+        }
+
+        function triggerHug(event) {
+            var page = copy[state.lang].pages[1];
+            var content = byId("c-content");
+            var picked = randomItem(hugs[state.lang]);
+            if (event) {
+                popParticles(event);
+            }
+            content.style.opacity = "0";
+            content.style.transition = "opacity 0.28s ease";
+            window.setTimeout(function() {
+                content.innerHTML =
+                    '<p class="desc" style="font-weight:600;color:#475569;">' + escapeHtml(quoteText(picked)) + '</p>' +
+                    '<button class="happy-btn" onclick="goToPage(1)">' + escapeHtml(page.again) + '</button>' +
+                    '<div class="status-line" id="hug-status"></div>';
+                content.style.opacity = "1";
+            }, 260);
+        }
+
+        function ensureAudioTags() {
+            var host = byId("audio-host");
+            if (!host) {
+                return;
+            }
+            soundKeys.forEach(function(soundKey) {
+                getAudioInstance(soundKey);
+            });
+        }
+
+        function getAudioInstance(soundKey) {
+            if (!soundSources[soundKey]) {
+                return null;
+            }
+            if (audioInstances[soundKey]) {
+                return audioInstances[soundKey];
+            }
+            var audio = document.createElement("audio");
+            audio.id = "oasis-audio-" + soundKey;
+            audio.loop = true;
+            audio.preload = "auto";
+            audio.src = soundSources[soundKey];
+            audio.volume = 0.42;
+            audioInstances[soundKey] = audio;
+            var host = byId("audio-host");
+            if (host) {
+                host.appendChild(audio);
+            }
+            return audio;
+        }
+
+        function soundKey(event, soundKey, element) {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                toggleSound(soundKey, element);
+            }
+        }
+
+        function toggleSound(soundKey, element) {
+            var page = copy[state.lang].pages[2];
+            var audio = getAudioInstance(soundKey);
+            var status = byId("sound-status");
+            if (!audio) {
+                return;
+            }
+            if (!audio.paused || fallbackAudioInstances[soundKey]) {
+                stopSound(soundKey);
+                updateSoundStatus(page);
+                return;
+            }
+            element.classList.add("playing");
+            if (status) status.innerText = page.playing;
+            primeFallbackAudioContext();
+            audio.play().catch(function() {
+                startFallbackSound(soundKey);
+                if (status) status.innerText = page.playing;
+            });
+        }
+
+        function updateSoundStatus(page) {
+            var playingCount = document.querySelectorAll(".sound-item.playing").length;
+            var status = byId("sound-status");
+            if (!status) {
+                return;
+            }
+            status.innerText = playingCount > 0 ? page.playing : page.ready;
+        }
+
+        function stopSound(soundKey) {
+            var audio = audioInstances[soundKey];
+            if (audio) {
+                audio.pause();
+                audio.currentTime = 0;
+            }
+            if (fallbackAudioInstances[soundKey]) {
+                fallbackAudioInstances[soundKey].stop();
+                delete fallbackAudioInstances[soundKey];
+            }
+            var item = byId("sound-" + soundKey);
+            if (item) {
+                item.classList.remove("playing");
+            }
+        }
+
+        function stopAllAudio() {
+            soundKeys.forEach(function(soundKey) {
+                stopSound(soundKey);
+            });
+        }
+
+        function primeFallbackAudioContext() {
+            var AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContextClass) {
+                return null;
+            }
+            if (!fallbackAudioContext) {
+                fallbackAudioContext = new AudioContextClass();
+            }
+            if (fallbackAudioContext.state === "suspended" && fallbackAudioContext.resume) {
+                fallbackAudioContext.resume();
+            }
+            return fallbackAudioContext;
+        }
+
+        function startFallbackSound(soundKey) {
+            if (fallbackAudioInstances[soundKey]) {
+                return;
+            }
+            var context = primeFallbackAudioContext();
+            if (!context) {
+                return;
+            }
+            var gain = context.createGain();
+            gain.gain.value = soundKey === "cat" ? 0.035 : 0.05;
+            gain.connect(context.destination);
+            var nodes = [];
+            if (soundKey === "cat") {
+                [72, 86].forEach(function(frequency) {
+                    var oscillator = context.createOscillator();
+                    oscillator.type = "sine";
+                    oscillator.frequency.value = frequency;
+                    oscillator.connect(gain);
+                    oscillator.start();
+                    nodes.push(oscillator);
+                });
+            } else {
+                var duration = 2;
+                var buffer = context.createBuffer(1, context.sampleRate * duration, context.sampleRate);
+                var data = buffer.getChannelData(0);
+                for (var index = 0; index < data.length; index += 1) {
+                    var noise = Math.random() * 2 - 1;
+                    if (soundKey === "fire") data[index] = noise * (Math.random() > 0.986 ? 0.95 : 0.045);
+                    if (soundKey === "rain") data[index] = noise * 0.16;
+                    if (soundKey === "leaves") data[index] = noise * (Math.random() > 0.92 ? 0.18 : 0.035);
+                }
+                var source = context.createBufferSource();
+                source.buffer = buffer;
+                source.loop = true;
+                var filter = context.createBiquadFilter();
+                filter.type = soundKey === "rain" ? "lowpass" : "bandpass";
+                filter.frequency.value = soundKey === "rain" ? 1200 : soundKey === "fire" ? 650 : 1900;
+                source.connect(filter);
+                filter.connect(gain);
+                source.start();
+                nodes.push(source);
+                nodes.push(filter);
+            }
+            fallbackAudioInstances[soundKey] = {
+                stop: function() {
+                    nodes.forEach(function(node) {
+                        try {
+                            if (node.stop) node.stop();
+                            if (node.disconnect) node.disconnect();
+                        } catch (error) {}
+                    });
+                    try { gain.disconnect(); } catch (error) {}
+                }
+            };
+        }
+
+        function toggleBreathing() {
+            if (breatheAnimation) {
+                stopBreathing();
+            } else {
+                startBreathing();
+            }
+        }
+
+        function startBreathing() {
+            var page = copy[state.lang].pages[2];
+            var wrap = byId("breathe-wrap");
+            var circle = byId("breathe-circle");
+            var label = byId("breathe-label");
+            var button = byId("breathe-btn");
+            if (!wrap || !circle || !label || !button) {
+                return;
+            }
+            wrap.style.display = "flex";
+            button.innerText = page.stop;
+            breatheAnimation = circle.animate([
+                { transform: "scale(0.72)", opacity: 0.44, offset: 0 },
+                { transform: "scale(1.48)", opacity: 0.72, offset: 0.21 },
+                { transform: "scale(1.48)", opacity: 0.66, offset: 0.58 },
+                { transform: "scale(0.72)", opacity: 0.44, offset: 1 }
+            ], { duration: 19000, iterations: Infinity, easing: "ease-in-out" });
+            var phase = 0;
+            label.innerText = page.phases[phase];
+            breathePhaseTimer = window.setInterval(function() {
+                phase = (phase + 1) % page.phases.length;
+                label.innerText = page.phases[phase];
+            }, 4000);
+        }
+
+        function stopBreathing() {
+            var page = copy[state.lang].pages[state.page] || copy[state.lang].pages[2];
+            var button = byId("breathe-btn");
+            var wrap = byId("breathe-wrap");
+            if (breatheAnimation) {
+                breatheAnimation.cancel();
+                breatheAnimation = null;
+            }
+            if (breathePhaseTimer) {
+                window.clearInterval(breathePhaseTimer);
+                breathePhaseTimer = null;
+            }
+            if (button && page.start) {
+                button.innerText = page.start;
+            }
+            if (wrap) {
+                wrap.style.display = "none";
+            }
+        }
+
+        function resetVentInput(input) {
+            input.value = "";
+            input.classList.remove("becoming-bubble");
+            input.removeAttribute("readonly");
+            [
+                "transition",
+                "transform",
+                "opacity",
+                "filter",
+                "width",
+                "height",
+                "padding",
+                "color",
+                "background",
+                "border",
+                "border-color",
+                "border-radius",
+                "box-shadow",
+                "margin"
+            ].forEach(function(property) {
+                input.style.removeProperty(property);
+            });
+        }
+
+        function clearVent(event) {
+            var page = copy[state.lang].pages[3];
+            var input = byId("v-text");
+            var status = byId("vent-status");
+            var button = event && event.currentTarget ? event.currentTarget : null;
+            if (!input || input.value.trim() === "") {
+                if (status) status.innerText = page.empty;
+                return;
+            }
+            if (event) {
+                popParticles(event);
+            }
+            if (status) status.innerText = "";
+            if (button) button.disabled = true;
+            input.setAttribute("readonly", "readonly");
+            input.classList.remove("becoming-bubble");
+            void input.offsetWidth;
+            input.classList.add("becoming-bubble");
+            window.setTimeout(function() {
+                resetVentInput(input);
+                if (button) button.disabled = false;
+                if (status) status.innerText = page.released;
+            }, 1600);
+        }
+
+        async function submitJoy(event) {
+            var page = copy[state.lang].pages[4];
+            var input = byId("joy-text");
+            var status = byId("joy-status");
+            var text = input ? input.value.trim().replace(/\s+/g, " ") : "";
+            if (text.length < 3 || text.length > 220) {
+                if (status) status.innerText = page.empty;
+                return;
+            }
+            if (event) {
+                popParticles(event);
+            }
+            if (status) status.innerText = page.saving;
+            lastSubmittedJoy = text;
+            try {
+                var response = await fetch("/api/oasis/joy", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ lang: state.lang, text: text })
+                });
+                if (!response.ok) {
+                    throw new Error("save failed");
+                }
+                if (input) input.value = "";
+                if (status) status.innerText = page.saved;
+                await triggerSwap(null, text);
+            } catch (error) {
+                if (input) input.value = "";
+                if (status) status.innerText = page.failed;
+                showJoy(randomItem(joyFallbacks[state.lang].filter(function(item) { return item !== text; })));
+            }
+        }
+
+        async function triggerSwap(event, avoidText) {
+            var page = copy[state.lang].pages[4];
+            if (event) {
+                popParticles(event);
+            }
+            try {
+                var response = await fetch("/api/oasis/joy?lang=" + encodeURIComponent(state.lang) + "&_=" + Date.now());
+                if (!response.ok) {
+                    throw new Error("fetch failed");
+                }
+                var data = await response.json();
+                var text = data.text || "";
+                if (!text || text === avoidText || text === lastSubmittedJoy) {
+                    text = randomItem(joyFallbacks[state.lang].filter(function(item) { return item !== avoidText && item !== lastSubmittedJoy; }));
+                }
+                showJoy(text);
+            } catch (error) {
+                if (byId("joy-status")) byId("joy-status").innerText = page.failed;
+                showJoy(randomItem(joyFallbacks[state.lang]));
+            }
+        }
+
+        function showJoy(text) {
+            var box = byId("j-box");
+            if (!box) {
+                return;
+            }
+            box.style.opacity = "0";
+            box.style.transition = "opacity 0.24s ease";
+            window.setTimeout(function() {
+                box.innerText = quoteText(text);
+                box.style.opacity = "1";
+            }, 180);
+        }
+
+        function popParticles(event) {
+            var x = event && event.clientX ? event.clientX : window.innerWidth / 2;
+            var y = event && event.clientY ? event.clientY : window.innerHeight / 2;
+            for (var i = 0; i < 10; i += 1) {
+                var dot = document.createElement("span");
+                dot.innerText = "✦";
+                dot.style.position = "fixed";
+                dot.style.left = x + "px";
+                dot.style.top = y + "px";
+                dot.style.zIndex = "99";
+                dot.style.pointerEvents = "none";
+                dot.style.color = i % 2 ? "#FAD0C4" : "#FCD34D";
+                dot.style.fontSize = 10 + Math.random() * 8 + "px";
+                dot.style.opacity = "0.9";
+                dot.style.transform = "translate(-50%, -50%) scale(1)";
+                dot.style.transition = "transform 760ms ease, opacity 760ms ease";
+                document.body.appendChild(dot);
+                (function(node) {
+                    var angle = Math.random() * Math.PI * 2;
+                    var distance = 34 + Math.random() * 54;
+                    window.requestAnimationFrame(function() {
+                        node.style.transform = "translate(" + Math.cos(angle) * distance + "px, " + Math.sin(angle) * distance + "px) scale(0.3)";
+                        node.style.opacity = "0";
+                    });
+                    window.setTimeout(function() {
+                        node.remove();
+                    }, 820);
+                })(dot);
+            }
+        }
+
+        window.addEventListener("popstate", function() {
+            readInitialState();
+            stopAllAudio();
+            stopBreathing();
+            syncShell();
+            renderPage();
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            readInitialState();
+            syncShell();
+            goToPage(state.page, true);
+        });
+    </script>
+</body>
+</html>

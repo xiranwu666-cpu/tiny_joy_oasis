@@ -1,0 +1,42 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "functions": {
+    "api/oasis/page.js": {
+      "includeFiles": "oasis/index.html"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/api/oasis/page?lang=zh&route=today"
+    },
+    {
+      "source": "/robots.txt",
+      "destination": "/api/oasis/robots"
+    },
+    {
+      "source": "/oasis/sitemap.xml",
+      "destination": "/api/oasis/sitemap"
+    },
+    {
+      "source": "/oasis",
+      "destination": "/api/oasis/page?lang=zh&route=today"
+    },
+    {
+      "source": "/oasis/:lang/:route",
+      "destination": "/api/oasis/page?lang=:lang&route=:route"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/oasis/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    }
+  ]
+}
