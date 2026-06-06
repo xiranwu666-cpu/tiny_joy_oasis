@@ -26,6 +26,7 @@
     <link rel="alternate" hreflang="x-default" id="alt-default" href="__ALT_DEFAULT__">
     <script type="application/ld+json" id="structured-data">__STRUCTURED_DATA__</script>
     __GA_SNIPPET__
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js" data-oasis-qr="true" defer></script>
     <style>
         /* 全局治愈系底色：燕麦奶白到清晨薄雾蓝 */
         body {
@@ -221,18 +222,108 @@
         .joy-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
         .soft-link-btn { background: rgba(255, 255, 255, 0.56); box-shadow: none; border: 1px solid rgba(226, 232, 240, 0.7); }
         .share-row { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+        .poster-preview { display: none; margin-top: 18px; }
+        .poster-preview img { max-width: 100%; border-radius: 18px; border: 1px solid rgba(226, 232, 240, 0.7); box-shadow: 0 18px 40px rgba(148, 163, 184, 0.12); }
+        .main-container.share-active { max-width: 1120px; margin: 0 auto; gap: 32px; align-items: center; }
+        .dopamine-card.kindness-ready { text-align: center; }
+        .dopamine-card.kindness-ready .card-tag { background: #FFF1F2; color: #FDA4AF; padding: 6px 16px; letter-spacing: 2px; font-size: 12px; }
+        .dopamine-card.kindness-ready h2 { font-size: 24px; font-weight: 400; color: #1e293b; }
+        .dopamine-card.kindness-ready p.desc { font-size: 15px; line-height: 1.8; color: #64748b; }
+        .again-row { text-align: center; margin-bottom: 10px; }
+        .dopamine-card.kindness-ready .share-row { justify-content: center; }
+        .poster-action-btn { width: min(100%, 430px); display: inline-flex; align-items: center; justify-content: center; gap: 10px; font-size: 16px; box-shadow: 0 14px 34px rgba(250, 208, 196, 0.48); }
+        .poster-camera { width: 22px; height: 18px; border-radius: 5px; background: #241a14; display: inline-block; position: relative; box-shadow: inset 0 0 0 2px rgba(255,255,255,0.08); }
+        .poster-camera::before { content: ""; position: absolute; width: 8px; height: 5px; border-radius: 3px 3px 0 0; left: 5px; top: -4px; background: #241a14; }
+        .poster-camera::after { content: ""; position: absolute; width: 7px; height: 7px; border: 2px solid #FEE180; border-radius: 50%; left: 6px; top: 4px; }
+        .share-card-kicker { margin-top: 20px; text-align: center; color: #1e293b; font-size: 15px; font-weight: 600; }
+        .share-panel {
+            display: none;
+            width: min(340px, calc(100vw - 40px));
+            background: rgba(255, 255, 255, 0.48);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.78);
+            border-radius: 24px;
+            padding: 16px;
+            box-sizing: border-box;
+            box-shadow: 0 30px 60px rgba(71, 85, 105, 0.14);
+        }
+        .share-panel.active { display: block; animation: sharePanelIn 360ms ease forwards; }
+        @keyframes sharePanelIn {
+            from { transform: translateY(14px) scale(0.98); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        .share-card-preview {
+            min-height: 392px;
+            aspect-ratio: 3 / 4;
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(255, 249, 248, 0.92), rgba(230, 240, 250, 0.72));
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.82);
+            box-shadow: inset 0 0 0 1px rgba(226, 232, 240, 0.26);
+        }
+        .share-card-preview img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .share-empty-preview { color: #94a3b8; font-size: 13px; letter-spacing: 1px; }
+        .share-panel-actions { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 18px; align-items: start; margin-top: 14px; }
+        .share-panel-label { font-size: 13px; color: #1e293b; margin-bottom: 8px; white-space: nowrap; }
+        .share-save-btn {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(226, 232, 240, 0.78);
+            background: rgba(255, 255, 255, 0.5);
+            color: #94a3b8;
+            cursor: pointer;
+            border-radius: 16px;
+            font-size: 22px;
+            font-weight: 300;
+            line-height: 1;
+            position: relative;
+            box-shadow: 0 10px 22px rgba(148, 163, 184, 0.08);
+            transition: all 0.25s ease;
+        }
+        .share-save-btn:hover, .social-btn:hover { transform: translateY(-2px); }
+        .social-actions { display: flex; align-items: center; gap: 9px; }
+        .social-btn {
+            width: 36px;
+            height: 36px;
+            border: 1px solid rgba(226, 232, 240, 0.72);
+            border-radius: 14px;
+            color: #64748b;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 10px 22px rgba(148, 163, 184, 0.08);
+            transition: all 0.25s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .social-btn.wechat { background: linear-gradient(135deg, rgba(230, 240, 250, 0.7), rgba(255,255,255,0.72)); }
+        .social-btn.weibo { background: linear-gradient(135deg, rgba(254, 225, 128, 0.36), rgba(255,255,255,0.72)); color: #8a6b35; }
+        .social-btn.instagram { background: linear-gradient(135deg, rgba(250, 208, 196, 0.46), rgba(230, 240, 250, 0.62)); color: #7b6670; }
+        .share-panel-status { min-height: 20px; margin-top: 12px; color: #94a3b8; font-size: 12px; line-height: 1.6; text-align: center; }
         .seo-guide-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; max-width: 860px; padding: 0 24px 32px; box-sizing: border-box; }
         .seo-guide-links a { color: #94a3b8; text-decoration: none; font-size: 12px; border: 1px solid rgba(226, 232, 240, 0.72); background: rgba(255,255,255,0.46); border-radius: 999px; padding: 7px 11px; }
         .privacy-note { max-width: 760px; padding: 0 28px 34px; box-sizing: border-box; color: #94a3b8; font-size: 12px; line-height: 1.8; text-align: center; }
         .vent-note { padding: 0; margin-top: 16px; }
         .visit-note { margin: -12px 0 26px; color: #94a3b8; font-size: 13px; line-height: 1.7; }
-        .faq-section { width: 100%; max-width: 820px; padding: 4px 28px 30px; box-sizing: border-box; color: #64748b; }
-        .faq-section h2 { font-size: 17px; text-align: center; margin: 0 0 16px; color: #475569; font-weight: 500; }
-        .faq-item { border-top: 1px solid rgba(226, 232, 240, 0.7); padding: 14px 0; }
-        .faq-item:last-child { border-bottom: 1px solid rgba(226, 232, 240, 0.7); }
-        .faq-item summary { cursor: pointer; color: #475569; font-size: 14px; list-style: none; }
-        .faq-item summary::-webkit-details-marker { display: none; }
-        .faq-item p { margin: 9px 0 0; color: #94a3b8; font-size: 13px; line-height: 1.8; }
+        .dopamine-card.guide-ready { max-width: 720px; text-align: left; }
+        .dopamine-card.guide-ready .card-tag { background: rgba(255, 241, 242, 0.72); color: #FDA4AF; font-size: 11px; letter-spacing: 1.8px; }
+        .dopamine-card.guide-ready h2 { color: #475569; font-size: 22px; line-height: 1.55; font-weight: 400; letter-spacing: 0; margin-bottom: 20px; }
+        .guide-card { color: #64748b; }
+        .guide-card .guide-intro { font-size: 15px; line-height: 1.9; margin: 0 0 20px; color: #64748b; }
+        .guide-section { border-top: 1px solid rgba(226, 232, 240, 0.62); padding-top: 17px; margin-top: 17px; }
+        .guide-section h3 { margin: 0 0 8px; color: #475569; font-size: 15px; line-height: 1.55; font-weight: 500; }
+        .guide-section p { margin: 0; color: #94a3b8; font-size: 14px; line-height: 1.9; }
+        .guide-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 24px; }
+        .guide-actions a { color: #64748b; text-decoration: none; font-size: 13px; }
+        .guide-actions .happy-btn { font-size: 14px; padding: 12px 22px; }
 
         @media (max-width: 760px) {
             .top-nav { padding: 24px 20px 10px; flex-direction: column; gap: 18px; }
@@ -240,7 +331,11 @@
             .page-tabs { width: 100%; justify-content: center; flex-wrap: wrap; gap: 8px; }
             .tab-btn { padding: 7px 10px; }
             .main-container { align-items: flex-start; padding: 18px; }
+            .main-container.share-active { flex-direction: column; gap: 20px; }
             .dopamine-card { padding: 38px 24px; border-radius: 26px; }
+            .dopamine-card.kindness-ready p.desc { font-size: 15px; }
+            .share-panel { width: min(100%, 360px); }
+            .share-card-preview { min-height: 360px; }
             .sound-grid { grid-template-columns: 1fr; }
         }
     </style>
@@ -275,6 +370,26 @@
                 <button class="happy-btn" onclick="triggerHug(event)">接入快乐 (Get a Micro-moment)</button>
             </div>
         </div>
+        <aside class="share-panel" id="share-panel" aria-live="polite" aria-label="OASIS share card">
+            <div class="share-card-preview" id="share-card-preview">
+                <div class="share-empty-preview" id="share-empty-preview">分享卡片</div>
+            </div>
+            <div class="share-panel-actions">
+                <div>
+                    <div class="share-panel-label" id="share-save-label">保存到相册</div>
+                    <button class="share-save-btn" id="share-save-btn" type="button" onclick="savePoster(event)" aria-label="保存海报" title="保存海报">↓</button>
+                </div>
+                <div>
+                    <div class="share-panel-label" id="share-social-label">分享到社媒</div>
+                    <div class="social-actions">
+                        <button class="social-btn wechat" id="share-wechat-btn" type="button" onclick="sharePosterSocial('wechat', event)" aria-label="分享到微信" title="分享到微信">微</button>
+                        <button class="social-btn weibo" id="share-weibo-btn" type="button" onclick="sharePosterSocial('weibo', event)" aria-label="分享到微博" title="分享到微博">博</button>
+                        <a class="social-btn instagram" id="share-instagram-btn" href="https://www.instagram.com/create/select/" target="_blank" rel="noopener" onclick="sharePosterSocial('instagram', event)" aria-label="分享到 Instagram" title="分享到 Instagram">IG</a>
+                    </div>
+                </div>
+            </div>
+            <div class="share-panel-status" id="share-panel-status"></div>
+        </aside>
     </div>
 
     <div class="footer-tips" id="footer-tips">无账号 · 不评判 · 只停留一小会儿</div>
@@ -285,14 +400,6 @@
         <a href="/oasis/zh/guide/anonymous-venting">匿名解压</a>
         <a href="/oasis/zh/guide/cozy-web-corner">治愈小角落</a>
     </nav>
-    <section class="faq-section" id="faq-section" aria-label="OASIS FAQ">
-        <h2>一些温柔说明</h2>
-        <details class="faq-item"><summary>OASIS 是什么？</summary><p>OASIS 是一个轻量的数字避难所，适合在疲惫、焦虑、睡前或工作间隙短暂停一下。</p></details>
-        <details class="faq-item"><summary>需要登录吗？</summary><p>不需要。你可以直接使用今日拥抱、白噪音和解压池。</p></details>
-        <details class="faq-item"><summary>解压池会公开我的内容吗？</summary><p>不会。解压池不是公开留言墙，你写下的内容不会展示给其他人。</p></details>
-        <details class="faq-item"><summary>OASIS 能代替心理咨询吗？</summary><p>不能。OASIS 只是轻量情绪陪伴工具，不提供医疗或心理治疗建议。</p></details>
-        <details class="faq-item"><summary>我什么时候适合打开它？</summary><p>当你感到累、焦虑、脑子太吵，或者只是想安静几分钟的时候。</p></details>
-    </section>
     <div class="privacy-note" id="privacy-note">OASIS 是轻量情绪陪伴工具，不提供医疗或心理治疗建议。匿名解压内容不会公开展示。如你正处于危机中，请及时联系身边的人或当地专业机构。</div>
     <div id="audio-host" aria-hidden="true"></div>
 
@@ -300,13 +407,20 @@
         var ROUTES = { 1: "today", 2: "sound", 3: "vent", 4: "joy" };
         var PUBLIC_ROUTES = { 1: "today", 2: "white-noise", 3: "release", 4: "joy" };
         var PAGE_BY_ROUTE = { today: 1, sound: 2, "white-noise": 2, vent: 3, release: 3, joy: 4 };
+        var GUIDE_SLUGS = ["digital-hug", "anxiety-breathing", "white-noise", "anonymous-venting", "cozy-web-corner"];
         var VALID_LANGS = { en: true, zh: true, tc: true };
         var SITE_ORIGIN = "__SITE_ORIGIN__";
-        var state = { lang: "zh", page: 1 };
+        var state = { lang: "zh", page: 1, guideSlug: "" };
         var breatheAnimation = null;
         var breathePhaseTimer = null;
         var lastSubmittedJoy = "";
         var lastHugText = "";
+        var lastJoyText = "";
+        var lastPosterDataUrl = "";
+        var lastPosterBlob = null;
+        var lastPosterFile = null;
+        var lastPosterKind = "";
+        var lastPosterSource = null;
         var lastTrackedPageView = "";
         const soundKeys = ["fire", "cat", "rain", "leaves"];
         const soundSources = {
@@ -343,6 +457,165 @@
             ]
         };
 
+        var guideContent = {
+            zh: {
+                "digital-hug": {
+                    eyebrow: "数字拥抱",
+                    title: "数字拥抱不是解决一切，它只是轻轻提醒你：这一分钟不用一个人扛。",
+                    intro: "在 OASIS 里，数字拥抱是一句很短的温柔话、一次慢一点的呼吸、一个允许自己不完美的提示。",
+                    sections: [
+                        ["为什么要做得很小", "当人已经疲惫时，长篇道理常常进不来。短句、轻触和可重复的小仪式，反而更容易被身体接住。"],
+                        ["怎么使用", "打开今日拥抱，慢慢读一句话，让它只陪你撑过下一分钟。它不需要变成新的任务。"]
+                    ],
+                    cta: "打开今日拥抱",
+                    page: 1,
+                    seo: ["数字拥抱｜给疲惫时刻的一分钟温柔", "了解数字拥抱、温柔句子和轻量线上仪式，如何让难熬的小瞬间没那么孤单。"]
+                },
+                "anxiety-breathing": {
+                    eyebrow: "呼吸引导",
+                    title: "呼吸练习不是为了做得完美，而是给身体一个可以跟随的稳定节奏。",
+                    intro: "声音绿洲里有一个安静的呼吸圆点。它慢慢变大、停留、再缩小，让注意力有一个简单的位置可以停靠。",
+                    sections: [
+                        ["基础节奏", "吸气 4 秒，停留 7 秒，呼气 8 秒。如果觉得太长，可以缩短。舒服比标准更重要。"],
+                        ["不要勉强", "如果屏息让你不舒服，就改成 3-3-5 这样的短节奏。柔和地停下来，也是一种照顾。"]
+                    ],
+                    cta: "试试白噪音呼吸",
+                    page: 2,
+                    seo: ["呼吸引导｜给焦虑时刻的柔和线上休息", "了解 4-7-8 呼吸节奏，以及如何用可视化呼吸圆点做短暂情绪缓冲。"]
+                },
+                "white-noise": {
+                    eyebrow: "白噪音",
+                    title: "一层轻轻的声音，可以让屏幕不那么刺眼，让房间变得更容易待下去。",
+                    intro: "白噪音和环境音的好处，是给注意力一个无害、稳定的落点。OASIS 把控制做得很简单：选一种声音，或者轻轻混合几种。",
+                    sections: [
+                        ["选择声音质感", "雨声像稳定的背景，柴火像温暖的房间，秋叶更空旷，猫咪呼噜则更靠近身体。"],
+                        ["音量放低", "它不需要盖过世界，只要像一层柔和背景，留在你的一天后面。"]
+                    ],
+                    cta: "打开声音绿洲",
+                    page: 2,
+                    seo: ["白噪音｜把网页变成舒服的小角落", "了解雨声、柴火、猫咪呼噜和秋叶声如何帮助你创造更安静的数字避难所。"]
+                },
+                "anonymous-venting": {
+                    eyebrow: "匿名解压",
+                    title: "有些念头不一定要被保存，它们只需要被看见、变轻，然后离开。",
+                    intro: "解压池允许你写下此刻很重的一句话，再让它慢慢沉下去。内容不会保存，也不会公开展示。",
+                    sections: [
+                        ["隐私为什么重要", "真正的释放不该让你担心以后谁会读到。OASIS 特意把这个仪式留在浏览器里。"],
+                        ["写得简单就好", "一句话、一个词、一段乱糟糟的草稿都可以。重点是表达，不是写得漂亮。"]
+                    ],
+                    cta: "进入解压池",
+                    page: 3,
+                    seo: ["匿名解压｜写下烦恼但不留下记录", "一个只在浏览器里发生的私人释放仪式，帮你命名烦恼又不公开展示。"]
+                },
+                "cozy-web-corner": {
+                    eyebrow: "治愈小角落",
+                    title: "一个舒服的网页角落，是在生活变得太吵之前，给自己留的一点空白。",
+                    intro: "OASIS 适合很短的访问：一句温柔话、一次呼吸、一层声音、一个陌生人的小开心。",
+                    sections: [
+                        ["访问要短", "两分钟就够了。越容易开始的小仪式，越可能真的留在生活里。"],
+                        ["轻轻分享", "如果某句话帮到了你，可以复制给一个可能也需要被温柔接住的人。"]
+                    ],
+                    cta: "进入 OASIS",
+                    page: 1,
+                    seo: ["治愈小角落｜把一个安静网页放进日常", "学会用一个免费的安静网页做每日短暂停靠，不把休息变成另一项任务。"]
+                }
+            }
+        };
+        guideContent.en = {
+            "digital-hug": {
+                eyebrow: "Digital Hug",
+                title: "A digital hug is a small signal that says: you do not have to carry this minute alone.",
+                intro: "In OASIS, a digital hug is one short kind sentence, one slower breath, and one reminder that being tired does not make you a failure.",
+                sections: [["Why tiny comfort works", "When the mind is overloaded, a small cue can be easier to receive than a long explanation."], ["How to use it", "Open Today's Hug, read one line slowly, and let it be enough for the next minute."]],
+                cta: "Open Today's Hug",
+                page: 1,
+                seo: ["Digital Hug | A tiny ritual for heavy moments", "A gentle guide to digital hugs, kind words, and small online rituals for difficult moments."]
+            },
+            "anxiety-breathing": {
+                eyebrow: "Breathing",
+                title: "Breathing is not about doing it perfectly. It is about giving the body one steady rhythm to follow.",
+                intro: "The Sound Oasis page includes a quiet breathing circle. It expands and settles so your attention has something simple to hold.",
+                sections: [["The rhythm", "Inhale for 4 seconds, hold for 7 seconds, and exhale for 8 seconds. Shorten it if that feels better."], ["Keep it low pressure", "Stop if breath holding feels uncomfortable. A softer rhythm is still a valid calming break."]],
+                cta: "Try Sound Oasis",
+                page: 2,
+                seo: ["Breathing Guide | A soft online break", "A simple explanation of 4-7-8 breathing and gentle visual breathing breaks."]
+            },
+            "white-noise": {
+                eyebrow: "White Noise",
+                title: "A small soundscape can make a screen feel less sharp and a room feel more held.",
+                intro: "White noise and ambient loops give attention a harmless place to rest. Pick one texture, or blend several softly.",
+                sections: [["Choose a texture", "Rain can feel steady, fire can feel warm, leaves can feel spacious, and a cat purr can feel familiar."], ["Use low volume", "Let the sound sit behind your day like a soft background."]],
+                cta: "Open White Noise",
+                page: 2,
+                seo: ["White Noise | A cozy digital sanctuary", "How soft ambient sounds can help create a quieter online corner."]
+            },
+            "anonymous-venting": {
+                eyebrow: "Private Venting",
+                title: "Some thoughts only need to be named, softened, and put down.",
+                intro: "The Release Pool lets you type one heavy sentence and let it sink out of the moment. The note is not saved or shown publicly.",
+                sections: [["Why privacy matters", "A venting space should not make you wonder who will read it later."], ["Write simply", "One sentence, one word, or a messy draft is enough."]],
+                cta: "Use Release Pool",
+                page: 3,
+                seo: ["Private Venting | Let worries go without saving them", "Why a private browser-only venting ritual can help without leaving a permanent record."]
+            },
+            "cozy-web-corner": {
+                eyebrow: "Cozy Web Corner",
+                title: "A cozy web corner is a place you visit before the day gets too loud.",
+                intro: "OASIS is designed for tiny visits: one sentence, one breath, one sound, one happy moment from someone else.",
+                sections: [["Keep visits short", "Two minutes is enough. A calming ritual works best when it remains easy to begin."], ["Share gently", "If a line helps you, copy it to someone who may need a softer minute too."]],
+                cta: "Enter OASIS",
+                page: 1,
+                seo: ["Cozy Web Corner | A tiny calming ritual", "A gentle guide to using a tiny calming website as a daily pause."]
+            }
+        };
+        guideContent.tc = {
+            "digital-hug": {
+                eyebrow: "數位擁抱",
+                title: "數位擁抱不是解決一切，它只是輕輕提醒你：這一分鐘不用一個人扛。",
+                intro: "在 OASIS 裡，數位擁抱是一句很短的溫柔話、一次慢一點的呼吸、一次允許自己不完美的提示。",
+                sections: [["為什麼要做得很小", "當人已經疲憊時，長篇道理常常進不來。短句和可重複的小儀式，反而更容易被身體接住。"], ["怎麼使用", "打開今日擁抱，慢慢讀一句話，讓它只陪你撐過下一分鐘。"]],
+                cta: "打開今日擁抱",
+                page: 1,
+                seo: ["數位擁抱｜給疲憊時刻的一分鐘溫柔", "了解數位擁抱、溫柔句子和輕量線上儀式。"]
+            },
+            "anxiety-breathing": {
+                eyebrow: "呼吸引導",
+                title: "呼吸練習不是為了做得完美，而是給身體一個可以跟隨的穩定節奏。",
+                intro: "聲音綠洲裡有一個安靜的呼吸圓點。它慢慢變大、停留、再縮小，讓注意力有一個簡單的位置可以停靠。",
+                sections: [["基礎節奏", "吸氣 4 秒，停留 7 秒，呼氣 8 秒。如果覺得太長，可以縮短。"], ["不要勉強", "如果屏息讓你不舒服，就改成更短的節奏。"]],
+                cta: "試試白噪音呼吸",
+                page: 2,
+                seo: ["呼吸引導｜給焦慮時刻的柔和線上休息", "了解 4-7-8 呼吸節奏和視覺化呼吸圓點。"]
+            },
+            "white-noise": {
+                eyebrow: "白噪音",
+                title: "一層輕輕的聲音，可以讓螢幕不那麼刺眼，讓房間變得更容易待下去。",
+                intro: "白噪音和環境音的好處，是給注意力一個無害、穩定的落點。",
+                sections: [["選擇聲音質感", "雨聲像穩定的背景，柴火像溫暖的房間，秋葉更空曠，貓咪呼嚕則更靠近身體。"], ["音量放低", "它不需要蓋過世界，只要像一層柔和背景。"]],
+                cta: "打開聲音綠洲",
+                page: 2,
+                seo: ["白噪音｜把網頁變成舒服的小角落", "了解環境音如何幫助你創造安靜的數位避難所。"]
+            },
+            "anonymous-venting": {
+                eyebrow: "匿名解壓",
+                title: "有些念頭不一定要被保存，它們只需要被看見、變輕，然後離開。",
+                intro: "解壓池允許你寫下此刻很重的一句話，再讓它慢慢沉下去。內容不會保存，也不會公開展示。",
+                sections: [["隱私為什麼重要", "真正的釋放不該讓你擔心以後誰會讀到。"], ["寫得簡單就好", "一句話、一個詞、一段亂糟糟的草稿都可以。"]],
+                cta: "進入解壓池",
+                page: 3,
+                seo: ["匿名解壓｜寫下煩惱但不留下記錄", "一個只在瀏覽器裡發生的私人釋放儀式。"]
+            },
+            "cozy-web-corner": {
+                eyebrow: "治癒小角落",
+                title: "一個舒服的網頁角落，是在生活變得太吵之前，給自己留的一點空白。",
+                intro: "OASIS 適合很短的訪問：一句溫柔話、一次呼吸、一層聲音、一個陌生人的小開心。",
+                sections: [["訪問要短", "兩分鐘就夠了。越容易開始的小儀式，越可能真的留在生活裡。"], ["輕輕分享", "如果某句話幫到了你，可以複製給一個也需要被溫柔接住的人。"]],
+                cta: "進入 OASIS",
+                page: 1,
+                seo: ["治癒小角落｜把一個安靜網頁放進日常", "用一個免費的安靜網頁做每日短暫停靠。"]
+            }
+        };
+
         var copy = {
             zh: {
                 langAttr: "zh-CN",
@@ -356,18 +629,31 @@
                     returning: "你已经来这里停过 {count} 天。不是打卡，只是记录你来照顾过自己。",
                     todayPause: "这是你今天给自己的一个小暂停。"
                 },
-                faqTitle: "一些温柔说明",
-                faq: [
-                    ["OASIS 是什么？", "OASIS 是一个轻量的数字避难所，适合在疲惫、焦虑、睡前或工作间隙短暂停一下。"],
-                    ["需要登录吗？", "不需要。你可以直接使用今日拥抱、白噪音和解压池。"],
-                    ["解压池会公开我的内容吗？", "不会。解压池不是公开留言墙，你写下的内容不会展示给其他人。"],
-                    ["OASIS 能代替心理咨询吗？", "不能。OASIS 只是轻量情绪陪伴工具，不提供医疗或心理治疗建议。"],
-                    ["我什么时候适合打开它？", "当你感到累、焦虑、脑子太吵，或者只是想安静几分钟的时候。"]
-                ],
                 share: {
                     button: "复制这份温柔",
                     copied: "已复制，可以分享给一个刚好需要的人。",
-                    prefix: "今天给你一个小小的数字拥抱："
+                    prefix: "今天给你一个小小的数字拥抱：",
+                    poster: "生成治愈精美海报",
+                    posterReady: "海报已生成，可以保存或分享到社媒。",
+                    posterFallback: "海报已生成，可以长按预览图保存。",
+                    posterTitle: "给此刻的一点温柔",
+                    posterJoyTitle: "陌生人留下的一点开心",
+                    posterFootnote: "扫码打开 OASIS",
+                    panelTitle: "分享卡片",
+                    save: "保存到相册",
+                    social: "分享到社媒",
+                    saveAria: "保存治愈海报",
+                    wechat: "分享到微信",
+                    weibo: "分享到微博",
+                    instagram: "分享到 Instagram",
+                    posterSaved: "海报已下载。手机上也可以长按预览图保存。",
+                    posterMissing: "先生成一张治愈海报吧。",
+                    nativeReady: "已唤起系统分享。",
+                    nativeFallback: "文案和链接已复制，可以配上海报一起发布。",
+                    wechatReady: "文案和链接已复制，海报已下载；正在尝试打开微信。",
+                    weiboReady: "已打开微博分享窗口；海报可保存后一起上传。",
+                    instagramReady: "海报已下载，文案已复制；正在打开 Instagram 发布页。",
+                    caption: "OASIS 给你一个小暂停"
                 },
                 seo: {
                     today: ["今日拥抱｜给疲惫大人的一句温柔话", "当你感到疲惫、焦虑或需要短暂停一下时，来 OASIS 获得一句今日拥抱。"],
@@ -430,18 +716,31 @@
                     returning: "You have paused here on {count} days. Not a streak, just a small record that you cared for yourself.",
                     todayPause: "This is one small pause you gave yourself today."
                 },
-                faqTitle: "A few soft notes",
-                faq: [
-                    ["What is OASIS?", "OASIS is a lightweight digital sanctuary for tired, anxious, bedtime, or in-between moments."],
-                    ["Do I need to log in?", "No. You can use Today's Hug, White Noise, and the Release Pool directly."],
-                    ["Will the Release Pool show my writing publicly?", "No. The Release Pool is not a public wall. What you write is not shown to other people."],
-                    ["Can OASIS replace therapy?", "No. OASIS is a lightweight emotional companion and does not provide medical care or therapy advice."],
-                    ["When should I open it?", "When you feel tired, anxious, overstimulated, or simply want a quiet few minutes."]
-                ],
                 share: {
                     button: "Copy this kindness",
                     copied: "Copied. Send it to someone who may need a softer minute.",
-                    prefix: "A tiny digital hug for today:"
+                    prefix: "A tiny digital hug for today:",
+                    poster: "Create healing poster",
+                    posterReady: "Poster created. Save it or share it with your people.",
+                    posterFallback: "Poster created. You can save or long-press the preview.",
+                    posterTitle: "A little kindness for this moment",
+                    posterJoyTitle: "A tiny joy from someone else",
+                    posterFootnote: "Scan to open OASIS",
+                    panelTitle: "Share Card",
+                    save: "Save to Album",
+                    social: "Share to Social Media",
+                    saveAria: "Save healing poster",
+                    wechat: "Share to WeChat",
+                    weibo: "Share to Weibo",
+                    instagram: "Share to Instagram",
+                    posterSaved: "Poster downloaded. On mobile, you can also long-press the preview to save.",
+                    posterMissing: "Create a healing poster first.",
+                    nativeReady: "System sharing is ready.",
+                    nativeFallback: "Caption and link copied. Pair them with the poster when you post.",
+                    wechatReady: "Caption and link copied. Poster downloaded. Trying to open WeChat.",
+                    weiboReady: "Weibo share window opened. Save the poster if you want to upload it too.",
+                    instagramReady: "Poster downloaded and caption copied. Opening Instagram's create page.",
+                    caption: "A tiny pause from OASIS"
                 },
                 seo: {
                     today: ["Today's Hug | A gentle pause for tired minds", "A tiny emotional pause for anxious, tired, or overstimulated moments."],
@@ -504,18 +803,31 @@
                     returning: "你已經來這裡停過 {count} 天。不是打卡，只是記錄你來照顧過自己。",
                     todayPause: "這是你今天給自己的一個小暫停。"
                 },
-                faqTitle: "一些溫柔說明",
-                faq: [
-                    ["OASIS 是什麼？", "OASIS 是一個輕量的數位避難所，適合在疲憊、焦慮、睡前或工作間隙短暫停一下。"],
-                    ["需要登入嗎？", "不需要。你可以直接使用今日擁抱、白噪音和解壓池。"],
-                    ["解壓池會公開我的內容嗎？", "不會。解壓池不是公開留言牆，你寫下的內容不會展示給其他人。"],
-                    ["OASIS 能代替心理諮詢嗎？", "不能。OASIS 只是輕量情緒陪伴工具，不提供醫療或心理治療建議。"],
-                    ["我什麼時候適合打開它？", "當你感到累、焦慮、腦子太吵，或者只是想安靜幾分鐘的時候。"]
-                ],
                 share: {
                     button: "複製這份溫柔",
                     copied: "已複製，可以分享給一個剛好需要的人。",
-                    prefix: "今天給你一個小小的數位擁抱："
+                    prefix: "今天給你一個小小的數位擁抱：",
+                    poster: "生成治癒精美海報",
+                    posterReady: "海報已生成，可以保存或分享到社媒。",
+                    posterFallback: "海報已生成，可以長按預覽圖保存。",
+                    posterTitle: "給此刻的一點溫柔",
+                    posterJoyTitle: "陌生人留下的一點開心",
+                    posterFootnote: "掃碼打開 OASIS",
+                    panelTitle: "分享卡片",
+                    save: "保存到相簿",
+                    social: "分享到社媒",
+                    saveAria: "保存治癒海報",
+                    wechat: "分享到微信",
+                    weibo: "分享到微博",
+                    instagram: "分享到 Instagram",
+                    posterSaved: "海報已下載。手機上也可以長按預覽圖保存。",
+                    posterMissing: "先生成一張治癒海報吧。",
+                    nativeReady: "已喚起系統分享。",
+                    nativeFallback: "文案和連結已複製，可以配上海報一起發布。",
+                    wechatReady: "文案和連結已複製，海報已下載；正在嘗試打開微信。",
+                    weiboReady: "已打開微博分享視窗；海報可保存後一起上傳。",
+                    instagramReady: "海報已下載，文案已複製；正在打開 Instagram 發布頁。",
+                    caption: "OASIS 給你一個小暫停"
                 },
                 seo: {
                     today: ["今日擁抱｜給疲憊大人的一句溫柔話", "當你感到疲憊、焦慮或需要短暫停一下時，來 OASIS 獲得一句今日擁抱。"],
@@ -739,6 +1051,25 @@
             return PUBLIC_ROUTES[page] || "today";
         }
 
+        function validGuideSlug(slug) {
+            return GUIDE_SLUGS.indexOf(slug) !== -1 ? slug : "";
+        }
+
+        function isStaticPreview() {
+            return window.location.protocol === "file:" || /\/oasis\/index\.html$/.test(window.location.pathname);
+        }
+
+        function guideUrl(lang, slug) {
+            var query = preservedSearch();
+            if (isStaticPreview()) {
+                var params = new URLSearchParams(query ? query.slice(1) : "");
+                params.set("lang", lang);
+                params.set("guide", slug);
+                return "/oasis/index.html?" + params.toString();
+            }
+            return "/oasis/" + lang + "/guide/" + slug + query;
+        }
+
         function preservedSearch() {
             var source = new URLSearchParams(window.location.search);
             var kept = new URLSearchParams();
@@ -760,19 +1091,21 @@
             var pathParts = window.location.pathname.split("/").filter(Boolean);
             var pathLang = pathParts[1];
             var pathRoute = pathParts[2];
+            var pathGuideSlug = pathRoute === "guide" ? pathParts[3] : "";
             var queryLang = params.get("lang");
             var queryPage = parseInt(params.get("page") || "", 10);
             state.lang = VALID_LANGS[queryLang] ? queryLang : (VALID_LANGS[pathLang] ? pathLang : "zh");
-            state.page = PAGE_BY_ROUTE[pathRoute] || (PAGE_BY_ROUTE[params.get("route")] || (ROUTES[queryPage] ? queryPage : 1));
+            state.guideSlug = validGuideSlug(params.get("guide") || pathGuideSlug);
+            state.page = state.guideSlug ? 1 : (PAGE_BY_ROUTE[pathRoute] || (PAGE_BY_ROUTE[params.get("route")] || (ROUTES[queryPage] ? queryPage : 1)));
         }
 
         function syncShell() {
             var t = copy[state.lang];
             for (var i = 1; i <= 4; i += 1) {
                 var button = byId("btn" + i);
-                button.className = i === state.page ? "tab-btn active" : "tab-btn";
+                button.className = !state.guideSlug && i === state.page ? "tab-btn active" : "tab-btn";
                 button.innerText = t.tabs[i - 1];
-                button.setAttribute("aria-current", i === state.page ? "page" : "false");
+                button.setAttribute("aria-current", !state.guideSlug && i === state.page ? "page" : "false");
             }
             ["en", "zh", "tc"].forEach(function(lang) {
                 byId("lang-" + lang).className = lang === state.lang ? "lang-link active" : "lang-link";
@@ -780,9 +1113,59 @@
             byId("footer-tips").innerText = t.footer;
             byId("privacy-note").innerText = t.privacy;
             syncGuideLinks();
-            syncFaq();
+            syncSharePanelText();
             document.documentElement.lang = t.langAttr;
             updateSeo();
+        }
+
+        function syncSharePanelText() {
+            var share = copy[state.lang].share;
+            var empty = byId("share-empty-preview");
+            var saveLabel = byId("share-save-label");
+            var socialLabel = byId("share-social-label");
+            var saveButton = byId("share-save-btn");
+            var wechatButton = byId("share-wechat-btn");
+            var weiboButton = byId("share-weibo-btn");
+            var instagramButton = byId("share-instagram-btn");
+            if (empty && !lastPosterDataUrl) empty.innerText = share.panelTitle;
+            if (saveLabel) saveLabel.innerText = share.save;
+            if (socialLabel) socialLabel.innerText = share.social;
+            if (saveButton) {
+                saveButton.setAttribute("aria-label", share.saveAria);
+                saveButton.setAttribute("title", share.saveAria);
+            }
+            if (wechatButton) {
+                wechatButton.setAttribute("aria-label", share.wechat);
+                wechatButton.setAttribute("title", share.wechat);
+            }
+            if (weiboButton) {
+                weiboButton.setAttribute("aria-label", share.weibo);
+                weiboButton.setAttribute("title", share.weibo);
+            }
+            if (instagramButton) {
+                instagramButton.setAttribute("aria-label", share.instagram);
+                instagramButton.setAttribute("title", share.instagram);
+            }
+        }
+
+        function hideSharePanel() {
+            var container = document.querySelector(".main-container");
+            var panel = byId("share-panel");
+            var preview = byId("share-card-preview");
+            var status = byId("share-panel-status");
+            var card = byId("core-card");
+            lastPosterDataUrl = "";
+            lastPosterBlob = null;
+            lastPosterFile = null;
+            lastPosterKind = "";
+            lastPosterSource = null;
+            if (container) container.classList.remove("share-active");
+            if (panel) panel.classList.remove("active");
+            if (card) card.classList.remove("kindness-ready");
+            if (preview) {
+                preview.innerHTML = '<div class="share-empty-preview" id="share-empty-preview">' + escapeHtml(copy[state.lang].share.panelTitle) + '</div>';
+            }
+            if (status) status.innerText = "";
         }
 
         function syncGuideLinks() {
@@ -791,11 +1174,28 @@
                 return;
             }
             guideLinks.innerHTML = guideNav[state.lang].map(function(item) {
-                return '<a href="/oasis/' + state.lang + '/guide/' + item[0] + '">' + escapeHtml(item[1]) + '</a>';
+                return '<a href="' + guideUrl(state.lang, item[0]) + '" onclick="openGuide(\'' + item[0] + '\', event)">' + escapeHtml(item[1]) + '</a>';
             }).join("");
         }
 
         function updateSeo() {
+            if (state.guideSlug) {
+                var guide = guideContent[state.lang][state.guideSlug];
+                var guideSeo = guide.seo || [guide.title, guide.intro];
+                var guideCanonical = getSeoOrigin() + "/oasis/" + state.lang + "/guide/" + state.guideSlug;
+                document.title = guideSeo[0];
+                setMeta("seo-description", "content", guideSeo[1]);
+                setMeta("seo-keywords", "content", guide.eyebrow + ", OASIS, digital sanctuary");
+                setMeta("og-title", "content", guideSeo[0]);
+                setMeta("og-description", "content", guideSeo[1]);
+                setMeta("og-url", "content", guideCanonical);
+                setMeta("canonical-link", "href", guideCanonical);
+                setMeta("alt-en", "href", getSeoOrigin() + "/oasis/en/guide/" + state.guideSlug);
+                setMeta("alt-zh", "href", getSeoOrigin() + "/oasis/zh/guide/" + state.guideSlug);
+                setMeta("alt-tc", "href", getSeoOrigin() + "/oasis/tc/guide/" + state.guideSlug);
+                setMeta("alt-default", "href", getSeoOrigin() + "/oasis/en/guide/" + state.guideSlug);
+                return;
+            }
             var route = ROUTES[state.page];
             var visibleRoute = publicRoute(state.page);
             var seo = copy[state.lang].seo[route];
@@ -826,19 +1226,6 @@
             setMeta("alt-default", "href", seoOrigin + "/oasis/en/" + visibleRoute);
         }
 
-        function syncFaq() {
-            var faq = byId("faq-section");
-            var current = copy[state.lang];
-            if (!faq || !current.faq) {
-                return;
-            }
-            faq.innerHTML =
-                '<h2>' + escapeHtml(current.faqTitle) + '</h2>' +
-                current.faq.map(function(item) {
-                    return '<details class="faq-item"><summary>' + escapeHtml(item[0]) + '</summary><p>' + escapeHtml(item[1]) + '</p></details>';
-                }).join("");
-        }
-
         function setMeta(id, attr, value) {
             var element = byId(id);
             if (element) {
@@ -855,6 +1242,8 @@
                 stopBreathing();
             }
             state.page = pageNum;
+            state.guideSlug = "";
+            hideSharePanel();
             syncShell();
             renderPage();
             if (!skipHistory) {
@@ -870,16 +1259,17 @@
             state.lang = lang;
             stopAllAudio();
             stopBreathing();
+            hideSharePanel();
             syncShell();
             renderPage();
-            window.history.pushState(null, "", routeUrl(state.lang, state.page));
+            window.history.pushState(null, "", state.guideSlug ? guideUrl(state.lang, state.guideSlug) : routeUrl(state.lang, state.page));
             trackPageView();
         }
 
         function trackPageView() {
-            var route = ROUTES[state.page];
+            var route = state.guideSlug ? "guide" : ROUTES[state.page];
             var path = window.location.pathname + window.location.search;
-            var dedupeKey = state.lang + "|" + route + "|" + path;
+            var dedupeKey = state.lang + "|" + route + "|" + (state.guideSlug || "") + "|" + path;
             if (dedupeKey === lastTrackedPageView) {
                 return;
             }
@@ -888,6 +1278,7 @@
                 lang: state.lang,
                 route: route,
                 path: path,
+                guideSlug: state.guideSlug || "",
                 referrer: document.referrer || "",
                 title: document.title
             };
@@ -919,11 +1310,20 @@
             }
             window.oasisTrack(eventName, Object.assign({
                 oasis_lang: state.lang,
-                oasis_route: ROUTES[state.page]
+                oasis_route: state.guideSlug ? "guide" : ROUTES[state.page],
+                guide_slug: state.guideSlug || undefined
             }, params || {}));
         }
 
         function renderPage() {
+            var card = byId("core-card");
+            if (card) {
+                card.classList.remove("guide-ready");
+            }
+            if (state.guideSlug) {
+                renderGuide(state.guideSlug);
+                return;
+            }
             var page = copy[state.lang].pages[state.page];
             byId("c-tag").innerText = page.tag;
             byId("c-title").innerText = page.title;
@@ -983,11 +1383,53 @@
             triggerSwap();
         }
 
+        function openGuide(slug, event) {
+            if (event && event.preventDefault) {
+                event.preventDefault();
+            }
+            slug = validGuideSlug(slug);
+            if (!slug) {
+                return;
+            }
+            stopAllAudio();
+            stopBreathing();
+            hideSharePanel();
+            state.guideSlug = slug;
+            state.page = 1;
+            syncShell();
+            renderPage();
+            window.history.pushState(null, "", guideUrl(state.lang, slug));
+            trackPageView();
+        }
+
+        function renderGuide(slug) {
+            var guide = guideContent[state.lang][slug] || guideContent[state.lang]["digital-hug"];
+            var card = byId("core-card");
+            if (card) {
+                card.classList.add("guide-ready");
+            }
+            byId("c-tag").innerText = guide.eyebrow;
+            byId("c-title").innerText = guide.title;
+            byId("c-content").innerHTML =
+                '<div class="guide-card">' +
+                    '<p class="guide-intro">' + escapeHtml(guide.intro) + '</p>' +
+                    guide.sections.map(function(section) {
+                        return '<section class="guide-section"><h3>' + escapeHtml(section[0]) + '</h3><p>' + escapeHtml(section[1]) + '</p></section>';
+                    }).join("") +
+                    '<div class="guide-actions">' +
+                        '<button class="happy-btn" onclick="goToPage(' + guide.page + ')">' + escapeHtml(guide.cta) + '</button>' +
+                        '<a href="' + routeUrl(state.lang, 1) + '" onclick="goToPage(1); return false;">OASIS</a>' +
+                    '</div>' +
+                '</div>';
+        }
+
         function triggerHug(event) {
             var page = copy[state.lang].pages[1];
             var content = byId("c-content");
             var picked = randomItem(hugs[state.lang]);
+            var share = copy[state.lang].share;
             lastHugText = picked;
+            hideSharePanel();
             trackGaEvent("hug_generate");
             if (event) {
                 popParticles(event);
@@ -997,9 +1439,16 @@
             window.setTimeout(function() {
                 content.innerHTML =
                     '<p class="desc" style="font-weight:600;color:#475569;">' + escapeHtml(quoteText(picked)) + '</p>' +
-                    '<button class="happy-btn" onclick="goToPage(1)">' + escapeHtml(page.again) + '</button>' +
-                    '<div class="share-row"><button class="happy-btn soft-link-btn" onclick="copyCurrentKindness(event)">' + escapeHtml(copy[state.lang].share.button) + '</button></div>' +
-                    '<div class="status-line" id="hug-status"></div>';
+                    '<div class="again-row"><button class="happy-btn" onclick="goToPage(1)">' + escapeHtml(page.again) + '</button></div>' +
+                    '<div class="share-row">' +
+                        '<button class="happy-btn soft-link-btn" onclick="copyCurrentKindness(event)">' + escapeHtml(copy[state.lang].share.button) + '</button>' +
+                        '<button class="happy-btn poster-action-btn" onclick="createHealingPoster(event, \'hug\')"><span class="poster-camera" aria-hidden="true"></span>' + escapeHtml(share.poster) + '</button>' +
+                    '</div>' +
+                    '<div class="share-card-kicker">' + escapeHtml(share.panelTitle) + '</div>' +
+                    '<div class="status-line" id="hug-status"></div>' +
+                    '<div class="poster-preview" id="poster-preview"></div>';
+                var card = byId("core-card");
+                if (card) card.classList.add("kindness-ready");
                 content.style.opacity = "1";
             }, 260);
         }
@@ -1038,6 +1487,667 @@
                 document.execCommand("copy");
             } catch (error) {}
             area.remove();
+        }
+
+        function getPosterSource(kind) {
+            var share = copy[state.lang].share;
+            if (kind === "joy") {
+                return {
+                    title: share.posterJoyTitle,
+                    text: lastJoyText || (byId("j-box") ? byId("j-box").innerText.replace(/[“”]/g, "") : randomItem(joyFallbacks[state.lang])),
+                    statusId: "joy-status"
+                };
+            }
+            return {
+                title: share.posterTitle,
+                text: lastHugText || randomItem(hugs[state.lang]),
+                statusId: "hug-status"
+            };
+        }
+
+        function roundRectPath(context, x, y, width, height, radius) {
+            context.beginPath();
+            context.moveTo(x + radius, y);
+            context.lineTo(x + width - radius, y);
+            context.quadraticCurveTo(x + width, y, x + width, y + radius);
+            context.lineTo(x + width, y + height - radius);
+            context.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            context.lineTo(x + radius, y + height);
+            context.quadraticCurveTo(x, y + height, x, y + height - radius);
+            context.lineTo(x, y + radius);
+            context.quadraticCurveTo(x, y, x + radius, y);
+            context.closePath();
+        }
+
+        function drawWrappedText(context, text, x, y, maxWidth, lineHeight, maxLines) {
+            var chars = Array.from(String(text));
+            var lines = [];
+            var line = "";
+            chars.forEach(function(char) {
+                var test = line + char;
+                if (context.measureText(test).width > maxWidth && line) {
+                    lines.push(line);
+                    line = char;
+                } else {
+                    line = test;
+                }
+            });
+            if (line) lines.push(line);
+            if (lines.length > maxLines) {
+                lines = lines.slice(0, maxLines);
+                while (context.measureText(lines[lines.length - 1] + "...").width > maxWidth && lines[lines.length - 1].length > 1) {
+                    lines[lines.length - 1] = lines[lines.length - 1].slice(0, -1);
+                }
+                lines[lines.length - 1] += "...";
+            }
+            lines.forEach(function(item, index) {
+                context.fillText(item, x, y + index * lineHeight);
+            });
+            return y + lines.length * lineHeight;
+        }
+
+        function drawCenteredWrappedText(context, text, centerX, y, maxWidth, lineHeight, maxLines) {
+            var chars = Array.from(String(text));
+            var lines = [];
+            var line = "";
+            chars.forEach(function(char) {
+                var test = line + char;
+                if (context.measureText(test).width > maxWidth && line) {
+                    lines.push(line);
+                    line = char;
+                } else {
+                    line = test;
+                }
+            });
+            if (line) lines.push(line);
+            if (lines.length > maxLines) {
+                lines = lines.slice(0, maxLines);
+                while (context.measureText(lines[lines.length - 1] + "...").width > maxWidth && lines[lines.length - 1].length > 1) {
+                    lines[lines.length - 1] = lines[lines.length - 1].slice(0, -1);
+                }
+                lines[lines.length - 1] += "...";
+            }
+            lines.forEach(function(item, index) {
+                context.fillText(item, centerX - context.measureText(item).width / 2, y + index * lineHeight);
+            });
+            return y + lines.length * lineHeight;
+        }
+
+        function drawWatercolorWash(context, x, y, width, height, color, alpha, rotation) {
+            var petals = [
+                [-0.32, -0.18, 0.58, 0.36],
+                [-0.08, -0.28, 0.64, 0.42],
+                [0.26, -0.1, 0.52, 0.34],
+                [0.18, 0.22, 0.62, 0.36],
+                [-0.22, 0.18, 0.56, 0.38],
+                [0.02, 0.02, 0.82, 0.5]
+            ];
+            context.save();
+            context.translate(x, y);
+            context.rotate((rotation || 0) * Math.PI / 180);
+            context.globalAlpha = alpha;
+            context.filter = "blur(20px)";
+            petals.forEach(function(petal) {
+                context.fillStyle = color;
+                context.beginPath();
+                context.ellipse(petal[0] * width, petal[1] * height, petal[2] * width, petal[3] * height, 0, 0, Math.PI * 2);
+                context.fill();
+            });
+            context.filter = "none";
+            context.restore();
+        }
+
+        function drawPaperGrain(context, width, height) {
+            context.save();
+            context.globalAlpha = 0.07;
+            for (var i = 0; i < 260; i += 1) {
+                var x = (i * 73) % width;
+                var y = (i * 137) % height;
+                context.fillStyle = i % 2 ? "#ffffff" : "#94a3b8";
+                context.fillRect(x, y, 2, 2);
+            }
+            context.restore();
+        }
+
+        function drawSoftStar(context, x, y, size, color) {
+            context.save();
+            context.translate(x, y);
+            context.fillStyle = color;
+            context.globalAlpha = 0.7;
+            context.beginPath();
+            context.moveTo(0, -size);
+            context.quadraticCurveTo(size * 0.18, -size * 0.18, size, 0);
+            context.quadraticCurveTo(size * 0.18, size * 0.18, 0, size);
+            context.quadraticCurveTo(-size * 0.18, size * 0.18, -size, 0);
+            context.quadraticCurveTo(-size * 0.18, -size * 0.18, 0, -size);
+            context.fill();
+            context.restore();
+        }
+
+        function drawTinyFlower(context, x, y) {
+            context.save();
+            context.translate(x, y);
+            context.fillStyle = "rgba(250, 208, 196, 0.88)";
+            for (var i = 0; i < 5; i += 1) {
+                context.save();
+                context.rotate((Math.PI * 2 / 5) * i);
+                context.beginPath();
+                context.ellipse(0, -20, 12, 22, 0, 0, Math.PI * 2);
+                context.fill();
+                context.restore();
+            }
+            context.fillStyle = "rgba(254, 225, 128, 0.96)";
+            context.beginPath();
+            context.arc(0, 0, 8, 0, Math.PI * 2);
+            context.fill();
+            context.restore();
+        }
+
+        function drawSoftWave(context, y, color, alpha, offset) {
+            context.save();
+            context.globalAlpha = alpha;
+            context.fillStyle = color;
+            context.beginPath();
+            context.moveTo(74, 1362);
+            context.lineTo(74, y + 40);
+            for (var x = 74; x <= 1006; x += 36) {
+                var waveY = y + Math.sin((x + offset) / 80) * 24;
+                context.lineTo(x, waveY);
+            }
+            context.lineTo(1006, 1362);
+            context.closePath();
+            context.fill();
+            context.restore();
+        }
+
+        function drawBotanicalLeaf(context, x, y, radiusX, radiusY, rotation, fillColor) {
+            context.save();
+            context.translate(x, y);
+            context.rotate(rotation * Math.PI / 180);
+            context.fillStyle = fillColor;
+            context.beginPath();
+            context.moveTo(0, -radiusY);
+            context.bezierCurveTo(radiusX, -radiusY * 0.55, radiusX * 0.9, radiusY * 0.55, 0, radiusY);
+            context.bezierCurveTo(-radiusX * 0.9, radiusY * 0.55, -radiusX, -radiusY * 0.55, 0, -radiusY);
+            context.fill();
+            context.strokeStyle = "rgba(255, 255, 255, 0.34)";
+            context.lineWidth = 1.2;
+            context.beginPath();
+            context.moveTo(0, -radiusY * 0.62);
+            context.lineTo(0, radiusY * 0.72);
+            context.stroke();
+            context.restore();
+        }
+
+        function drawBotanicalSprig(context) {
+            context.save();
+            context.translate(98, 1005);
+            context.fillStyle = "rgba(148, 163, 184, 0.09)";
+            context.beginPath();
+            context.ellipse(126, 312, 128, 34, -0.12, 0, Math.PI * 2);
+            context.fill();
+
+            context.strokeStyle = "rgba(87, 83, 78, 0.34)";
+            context.lineWidth = 4.2;
+            context.lineCap = "round";
+            context.beginPath();
+            context.moveTo(42, 300);
+            context.bezierCurveTo(72, 230, 108, 145, 162, 34);
+            context.stroke();
+
+            context.strokeStyle = "rgba(91, 119, 95, 0.28)";
+            context.lineWidth = 2.8;
+            [
+                [66, 292, 18, 228, 18, 158, 58, 94],
+                [86, 284, 128, 238, 158, 178, 188, 108],
+                [30, 302, 18, 256, 26, 204, 60, 154]
+            ].forEach(function(stem) {
+                context.beginPath();
+                context.moveTo(stem[0], stem[1]);
+                context.bezierCurveTo(stem[2], stem[3], stem[4], stem[5], stem[6], stem[7]);
+                context.stroke();
+            });
+
+            [
+                [86, 236, 18, 44, -44, "rgba(91, 119, 95, 0.56)"],
+                [112, 198, 20, 52, 38, "rgba(104, 132, 109, 0.52)"],
+                [126, 154, 17, 45, -34, "rgba(91, 119, 95, 0.48)"],
+                [154, 104, 16, 42, 34, "rgba(104, 132, 109, 0.48)"],
+                [48, 230, 15, 36, 48, "rgba(126, 150, 127, 0.44)"],
+                [42, 184, 13, 34, -38, "rgba(126, 150, 127, 0.42)"],
+                [154, 202, 14, 34, 58, "rgba(91, 119, 95, 0.42)"],
+                [174, 154, 13, 32, -46, "rgba(126, 150, 127, 0.4)"]
+            ].forEach(function(leaf) {
+                drawBotanicalLeaf(context, leaf[0], leaf[1], leaf[2], leaf[3], leaf[4], leaf[5]);
+            });
+
+            context.strokeStyle = "rgba(180, 123, 88, 0.34)";
+            context.lineWidth = 2;
+            context.beginPath();
+            context.moveTo(52, 260);
+            context.bezierCurveTo(18, 214, 12, 168, 30, 122);
+            context.stroke();
+
+            context.fillStyle = "rgba(180, 123, 88, 0.52)";
+            [[24, 124], [18, 148], [34, 160], [28, 184], [44, 196], [38, 220]].forEach(function(dot) {
+                context.beginPath();
+                context.arc(dot[0], dot[1], 6.2, 0, Math.PI * 2);
+                context.fill();
+            });
+
+            context.strokeStyle = "rgba(148, 163, 184, 0.3)";
+            context.lineWidth = 2;
+            [0, 1, 2].forEach(function(index) {
+                context.beginPath();
+                context.ellipse(118, 306 + index * 16, 78 + index * 15, 18 + index * 4, -0.16, 0, Math.PI * 2);
+                context.stroke();
+            });
+            context.restore();
+        }
+
+        function drawQrCode(context, url, x, y, size) {
+            if (typeof qrcode !== "function") {
+                context.fillStyle = "#ffffff";
+                roundRectPath(context, x, y, size, size, 22);
+                context.fill();
+                context.fillStyle = "#475569";
+                context.font = "18px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+                drawWrappedText(context, url, x + 18, y + 46, size - 36, 26, 5);
+                return;
+            }
+            var qr = qrcode(0, "M");
+            qr.addData(url);
+            qr.make();
+            var count = qr.getModuleCount();
+            var padding = 18;
+            var cell = Math.floor((size - padding * 2) / count);
+            var qrSize = cell * count;
+            var offset = Math.floor((size - qrSize) / 2);
+            context.fillStyle = "#ffffff";
+            roundRectPath(context, x, y, size, size, 22);
+            context.fill();
+            context.fillStyle = "#1e293b";
+            for (var row = 0; row < count; row += 1) {
+                for (var col = 0; col < count; col += 1) {
+                    if (qr.isDark(row, col)) {
+                        context.fillRect(x + offset + col * cell, y + offset + row * cell, cell, cell);
+                    }
+                }
+            }
+        }
+
+        function ensureQrLibrary() {
+            if (typeof qrcode === "function") {
+                return Promise.resolve(true);
+            }
+            return new Promise(function(resolve) {
+                var existing = document.querySelector('script[data-oasis-qr="true"]');
+                if (existing) {
+                    existing.addEventListener("load", function() { resolve(typeof qrcode === "function"); }, { once: true });
+                    existing.addEventListener("error", function() { resolve(false); }, { once: true });
+                    window.setTimeout(function() { resolve(typeof qrcode === "function"); }, 1800);
+                    return;
+                }
+                var script = document.createElement("script");
+                script.src = "https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js";
+                script.async = true;
+                script.dataset.oasisQr = "true";
+                script.onload = function() { resolve(typeof qrcode === "function"); };
+                script.onerror = function() { resolve(false); };
+                document.head.appendChild(script);
+                window.setTimeout(function() { resolve(typeof qrcode === "function"); }, 2200);
+            });
+        }
+
+        function posterPageUrl(kind) {
+            var page = kind === "joy" ? 4 : 1;
+            return getSeoOrigin() + "/oasis/" + state.lang + "/" + publicRoute(page);
+        }
+
+        function posterSharePayload(source, kind) {
+            var share = copy[state.lang].share;
+            return share.caption + "\n" + quoteText(source.text) + "\n" + posterPageUrl(kind);
+        }
+
+        function dataUrlToBlob(dataUrl) {
+            var parts = dataUrl.split(",");
+            var mime = (parts[0].match(/:(.*?);/) || [])[1] || "image/png";
+            var binary = atob(parts[1]);
+            var length = binary.length;
+            var bytes = new Uint8Array(length);
+            for (var i = 0; i < length; i += 1) {
+                bytes[i] = binary.charCodeAt(i);
+            }
+            return new Blob([bytes], { type: mime });
+        }
+
+        function copyTextToClipboard(text) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                return navigator.clipboard.writeText(text).catch(function() {
+                    fallbackCopy(text);
+                });
+            }
+            fallbackCopy(text);
+            return Promise.resolve();
+        }
+
+        function updatePosterStatus(message) {
+            var panelStatus = byId("share-panel-status");
+            var sourceStatus = lastPosterSource && byId(lastPosterSource.statusId);
+            if (panelStatus) panelStatus.innerText = message;
+            if (sourceStatus) sourceStatus.innerText = message;
+        }
+
+        function showSharePanel(dataUrl, blob, file, source, kind) {
+            var container = document.querySelector(".main-container");
+            var panel = byId("share-panel");
+            var preview = byId("share-card-preview");
+            var inlinePreview = byId("poster-preview");
+            lastPosterDataUrl = dataUrl;
+            lastPosterBlob = blob;
+            lastPosterFile = file;
+            lastPosterKind = kind;
+            lastPosterSource = source;
+            if (container) container.classList.add("share-active");
+            if (panel) panel.classList.add("active");
+            if (preview) {
+                preview.innerHTML = '<img alt="OASIS healing poster preview" src="' + dataUrl + '">';
+            }
+            if (inlinePreview) {
+                inlinePreview.style.display = "none";
+                inlinePreview.innerHTML = "";
+            }
+            syncSharePanelText();
+            updatePosterStatus(copy[state.lang].share.posterReady);
+            if (panel && window.innerWidth < 880) {
+                window.setTimeout(function() {
+                    panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                }, 120);
+            }
+        }
+
+        function downloadPosterFile() {
+            if (!lastPosterDataUrl) {
+                updatePosterStatus(copy[state.lang].share.posterMissing);
+                return false;
+            }
+            var link = document.createElement("a");
+            link.href = lastPosterDataUrl;
+            link.download = "oasis-healing-poster.png";
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            return true;
+        }
+
+        function savePoster(event) {
+            if (event) popParticles(event);
+            if (!downloadPosterFile()) {
+                return;
+            }
+            updatePosterStatus(copy[state.lang].share.posterSaved);
+            trackGaEvent("poster_download", { poster_kind: lastPosterKind || "unknown" });
+        }
+
+        function isMobileLike() {
+            return /Android|iPhone|iPad|iPod|Mobile|MicroMessenger/i.test(navigator.userAgent || "");
+        }
+
+        function tryOpenApp(appUrl, webUrl) {
+            var didLeave = false;
+            function markLeave() {
+                if (document.hidden) didLeave = true;
+            }
+            document.addEventListener("visibilitychange", markLeave, { once: true });
+            if (appUrl) {
+                window.location.href = appUrl;
+            }
+            if (webUrl) {
+                window.setTimeout(function() {
+                    document.removeEventListener("visibilitychange", markLeave);
+                    if (!didLeave) {
+                        window.open(webUrl, "_blank", "noopener,noreferrer");
+                    }
+                }, 900);
+            }
+        }
+
+        function safeNavigateShareWindow(preparedWindow, url) {
+            if (preparedWindow && !preparedWindow.closed) {
+                try {
+                    preparedWindow.location.href = url;
+                    return true;
+                } catch (error) {}
+            }
+            window.open(url, "_blank", "noopener,noreferrer");
+            return false;
+        }
+
+        async function sharePosterNative() {
+            if (!lastPosterSource || !lastPosterDataUrl) {
+                updatePosterStatus(copy[state.lang].share.posterMissing);
+                return false;
+            }
+            var payload = posterSharePayload(lastPosterSource, lastPosterKind);
+            if (navigator.share) {
+                try {
+                    if (lastPosterFile && navigator.canShare && navigator.canShare({ files: [lastPosterFile] })) {
+                        await navigator.share({ files: [lastPosterFile], title: "OASIS", text: payload });
+                    } else {
+                        await navigator.share({ title: "OASIS", text: payload, url: posterPageUrl(lastPosterKind) });
+                    }
+                    updatePosterStatus(copy[state.lang].share.nativeReady);
+                    trackGaEvent("poster_share", { poster_kind: lastPosterKind || "unknown", platform: "native" });
+                    return true;
+                } catch (error) {
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        async function sharePosterSocial(platform, event) {
+            if (event) popParticles(event);
+            if (!lastPosterSource || !lastPosterDataUrl) {
+                updatePosterStatus(copy[state.lang].share.posterMissing);
+                return;
+            }
+            var share = copy[state.lang].share;
+            var payload = posterSharePayload(lastPosterSource, lastPosterKind);
+            var url = posterPageUrl(lastPosterKind);
+            var instagramCreateUrl = "https://www.instagram.com/create/select/";
+            var preparedInstagramWindow = null;
+            if (platform === "instagram" && !isMobileLike() && !(event && event.currentTarget && event.currentTarget.tagName === "A")) {
+                preparedInstagramWindow = window.open("about:blank", "_blank");
+            }
+            if (platform === "weibo") {
+                window.open("https://service.weibo.com/share/share.php?url=" + encodeURIComponent(url) + "&title=" + encodeURIComponent(payload), "_blank", "noopener,noreferrer");
+                updatePosterStatus(share.weiboReady);
+                trackGaEvent("poster_share", { poster_kind: lastPosterKind || "unknown", platform: "weibo" });
+                return;
+            }
+            if (platform === "instagram") {
+                if (event && event.preventDefault) {
+                    event.preventDefault();
+                }
+                if (isMobileLike()) {
+                    var sharedToSystem = await sharePosterNative();
+                    if (sharedToSystem) {
+                        if (preparedInstagramWindow && !preparedInstagramWindow.closed) {
+                            preparedInstagramWindow.close();
+                        }
+                        trackGaEvent("poster_share", { poster_kind: lastPosterKind || "unknown", platform: "instagram_native" });
+                        return;
+                    }
+                }
+                await copyTextToClipboard(payload);
+                downloadPosterFile();
+                updatePosterStatus(share.instagramReady);
+                if (isMobileLike()) {
+                    tryOpenApp("instagram://camera", instagramCreateUrl);
+                } else if (preparedInstagramWindow) {
+                    safeNavigateShareWindow(preparedInstagramWindow, instagramCreateUrl);
+                } else {
+                    window.setTimeout(function() {
+                        window.location.href = instagramCreateUrl;
+                    }, 180);
+                }
+                trackGaEvent("poster_share", { poster_kind: lastPosterKind || "unknown", platform: "instagram" });
+                return;
+            } else if (platform === "wechat") {
+                await copyTextToClipboard(payload);
+                downloadPosterFile();
+                tryOpenApp("weixin://dl/chat", "https://weixin.qq.com/");
+                updatePosterStatus(share.wechatReady);
+                trackGaEvent("poster_share", { poster_kind: lastPosterKind || "unknown", platform: "wechat" });
+                return;
+            }
+            var usedNativeShare = await sharePosterNative();
+            if (!usedNativeShare) {
+                await copyTextToClipboard(payload);
+                updatePosterStatus(share.nativeFallback);
+            }
+            trackGaEvent("poster_share_fallback", { poster_kind: lastPosterKind || "unknown", platform: platform });
+        }
+
+        async function createHealingPoster(event, kind) {
+            if (event) popParticles(event);
+            var source = getPosterSource(kind);
+            var share = copy[state.lang].share;
+            var status = byId(source.statusId);
+            var url = posterPageUrl(kind);
+            await ensureQrLibrary();
+            var canvas = document.createElement("canvas");
+            canvas.width = 1080;
+            canvas.height = 1440;
+            var context = canvas.getContext("2d");
+            var gradient = context.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, "#FFF8F0");
+            gradient.addColorStop(0.44, "#FDFBF7");
+            gradient.addColorStop(1, "#E6F0FA");
+            context.fillStyle = gradient;
+            context.fillRect(0, 0, canvas.width, canvas.height);
+
+            drawWatercolorWash(context, 285, 270, 430, 280, "rgba(250, 208, 196, 0.72)", 0.86, -10);
+            drawWatercolorWash(context, 760, 275, 360, 250, "rgba(254, 225, 128, 0.46)", 0.72, 12);
+            drawWatercolorWash(context, 700, 920, 500, 330, "rgba(230, 240, 250, 0.76)", 0.92, -8);
+            drawWatercolorWash(context, 260, 1020, 330, 240, "rgba(245, 239, 230, 0.86)", 0.76, 8);
+            drawSoftStar(context, 910, 1030, 44, "rgba(255, 255, 255, 0.82)");
+            drawSoftStar(context, 845, 1010, 18, "rgba(254, 225, 128, 0.52)");
+
+            context.save();
+            context.shadowColor = "rgba(71, 85, 105, 0.12)";
+            context.shadowBlur = 60;
+            context.shadowOffsetY = 34;
+            context.fillStyle = "rgba(255,255,255,0.68)";
+            roundRectPath(context, 74, 74, 932, 1288, 38);
+            context.fill();
+            context.restore();
+            context.strokeStyle = "rgba(255,255,255,0.88)";
+            context.lineWidth = 2;
+            roundRectPath(context, 74, 74, 932, 1288, 38);
+            context.stroke();
+            drawPaperGrain(context, canvas.width, canvas.height);
+
+            drawWatercolorWash(context, 405, 332, 500, 295, "rgba(250, 208, 196, 0.52)", 0.72, -7);
+            drawWatercolorWash(context, 684, 385, 460, 285, "rgba(254, 225, 128, 0.34)", 0.7, 9);
+            drawWatercolorWash(context, 610, 872, 620, 390, "rgba(230, 240, 250, 0.62)", 0.82, -12);
+            drawSoftWave(context, 1035, "rgba(230, 240, 250, 0.56)", 0.92, 0);
+            drawSoftWave(context, 1105, "rgba(250, 208, 196, 0.22)", 0.78, 90);
+            drawTinyFlower(context, 202, 310);
+            drawSoftStar(context, 887, 312, 24, "rgba(254, 225, 128, 0.55)");
+
+            context.fillStyle = "#334155";
+            context.font = "600 52px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+            context.letterSpacing = "0px";
+            context.fillText("OASIS ✦", 142, 206);
+
+            context.fillStyle = "rgba(100, 116, 139, 0.66)";
+            context.font = "400 19px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+            context.textAlign = "right";
+            context.fillText("Digital Sanctuary", 930, 196);
+            context.textAlign = "left";
+
+            context.fillStyle = "rgba(255, 255, 255, 0.54)";
+            roundRectPath(context, 142, 276, 796, 104, 32);
+            context.fill();
+            context.strokeStyle = "rgba(255, 255, 255, 0.68)";
+            context.lineWidth = 2;
+            roundRectPath(context, 142, 276, 796, 104, 32);
+            context.stroke();
+
+            context.fillStyle = "#64748b";
+            context.font = "400 30px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+            drawWrappedText(context, source.title, 252, 340, 650, 44, 1);
+
+            context.save();
+            context.shadowColor = "rgba(148, 163, 184, 0.08)";
+            context.shadowBlur = 42;
+            context.shadowOffsetY = 20;
+            context.fillStyle = "rgba(255, 255, 255, 0.48)";
+            roundRectPath(context, 136, 438, 808, 426, 56);
+            context.fill();
+            context.restore();
+            context.strokeStyle = "rgba(255, 255, 255, 0.72)";
+            context.lineWidth = 2;
+            roundRectPath(context, 136, 438, 808, 426, 56);
+            context.stroke();
+
+            context.save();
+            context.globalAlpha = 0.13;
+            context.fillStyle = "#64748b";
+            context.font = "600 112px Georgia, 'Times New Roman', serif";
+            context.fillText("“", 184, 555);
+            context.fillText("”", 828, 832);
+            context.restore();
+
+            context.fillStyle = "#475569";
+            context.font = "400 45px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+            drawCenteredWrappedText(context, source.text, 540, 552, 650, 76, 5);
+
+            context.fillStyle = "#94a3b8";
+            context.font = "22px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+            drawCenteredWrappedText(context, copy[state.lang].visit.todayPause || "A tiny pause from OASIS", 540, 924, 610, 34, 2);
+
+            drawBotanicalSprig(context);
+            context.save();
+            context.shadowColor = "rgba(71, 85, 105, 0.08)";
+            context.shadowBlur = 26;
+            context.shadowOffsetY = 12;
+            context.fillStyle = "rgba(255,255,255,0.68)";
+            roundRectPath(context, 552, 1132, 398, 188, 30);
+            context.fill();
+            context.restore();
+            context.strokeStyle = "rgba(226, 232, 240, 0.66)";
+            context.lineWidth = 2;
+            roundRectPath(context, 552, 1132, 398, 188, 30);
+            context.stroke();
+            drawQrCode(context, url, 790, 1158, 138);
+            context.fillStyle = "#64748b";
+            context.font = "20px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+            context.fillText(share.posterFootnote, 588, 1208);
+            context.fillStyle = "#94a3b8";
+            context.font = "18px -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif";
+            context.fillText("tiny-joy-oasis.vercel.app", 588, 1248);
+
+            var blob = await new Promise(function(resolve) {
+                canvas.toBlob(resolve, "image/png", 0.94);
+            });
+            var dataUrl = canvas.toDataURL("image/png");
+            if (!blob) {
+                blob = dataUrlToBlob(dataUrl);
+            }
+            var file = null;
+            if (blob && typeof File === "function") {
+                try {
+                    file = new File([blob], "oasis-healing-poster.png", { type: "image/png" });
+                } catch (error) {
+                    file = null;
+                }
+            }
+            showSharePanel(dataUrl, blob, file, source, kind);
+            if (status) status.innerText = share.posterReady;
+            trackGaEvent("poster_generate", { poster_kind: kind });
         }
 
         function ensureAudioTags() {
@@ -1369,9 +2479,37 @@
             box.style.opacity = "0";
             box.style.transition = "opacity 0.24s ease";
             window.setTimeout(function() {
+                lastJoyText = text;
                 box.innerText = quoteText(text);
                 box.style.opacity = "1";
+                ensureJoyPosterButton();
             }, 180);
+        }
+
+        function ensureJoyPosterButton() {
+            var actions = document.querySelector(".joy-actions");
+            if (!actions || byId("joy-poster-btn")) {
+                return;
+            }
+            var button = document.createElement("button");
+            button.className = "happy-btn soft-link-btn";
+            button.id = "joy-poster-btn";
+            button.type = "button";
+            button.innerText = copy[state.lang].share.poster;
+            button.onclick = function(event) {
+                createHealingPoster(event, "joy");
+            };
+            actions.appendChild(button);
+            var preview = byId("poster-preview");
+            if (!preview) {
+                preview = document.createElement("div");
+                preview.className = "poster-preview";
+                preview.id = "poster-preview";
+                var status = byId("joy-status");
+                if (status && status.parentNode) {
+                    status.parentNode.insertBefore(preview, status.nextSibling);
+                }
+            }
         }
 
         function popParticles(event) {
