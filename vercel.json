@@ -12,14 +12,6 @@
       "destination": "/api/oasis/page?lang=zh&route=today"
     },
     {
-      "source": "/robots.txt",
-      "destination": "/api/oasis/robots"
-    },
-    {
-      "source": "/oasis/sitemap.xml",
-      "destination": "/api/oasis/sitemap"
-    },
-    {
       "source": "/oasis",
       "destination": "/api/oasis/page?lang=zh&route=today"
     },
@@ -34,11 +26,50 @@
   ],
   "headers": [
     {
+      "source": "/sitemap.xml",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/xml; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, s-maxage=86400, stale-while-revalidate=3600"
+        }
+      ]
+    },
+    {
+      "source": "/robots.txt",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, s-maxage=86400, stale-while-revalidate=3600"
+        }
+      ]
+    },
+    {
       "source": "/oasis/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
           "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/oasis/sitemap.xml",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/xml; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, s-maxage=86400, stale-while-revalidate=3600"
         }
       ]
     }

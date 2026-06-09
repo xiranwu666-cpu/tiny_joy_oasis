@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /scripts/
+Disallow: /supabase/
+
+Sitemap: https://tiny-joy-oasis.vercel.app/sitemap.xml

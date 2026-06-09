@@ -34,7 +34,7 @@ https://tiny-joy-oasis.vercel.app
 7. Submit sitemap:
 
 ```txt
-https://tiny-joy-oasis.vercel.app/oasis/sitemap.xml
+https://tiny-joy-oasis.vercel.app/sitemap.xml
 ```
 
 8. Use URL Inspection and request indexing for:
@@ -54,7 +54,7 @@ https://tiny-joy-oasis.vercel.app/oasis/en/guide/digital-hug
 3. Submit the same sitemap:
 
 ```txt
-https://tiny-joy-oasis.vercel.app/oasis/sitemap.xml
+https://tiny-joy-oasis.vercel.app/sitemap.xml
 ```
 
 ## Free Distribution

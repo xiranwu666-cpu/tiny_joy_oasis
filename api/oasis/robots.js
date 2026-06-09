@@ -11,7 +11,7 @@ module.exports = async function handler(req, res) {
     "Disallow: /admin/",
     "Disallow: /scripts/",
     "Disallow: /supabase/",
-    `Sitemap: ${origin}/oasis/sitemap.xml`,
+    `Sitemap: ${origin}/sitemap.xml`,
     ""
   ].join("\n"));
 };

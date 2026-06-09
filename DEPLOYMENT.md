@@ -56,8 +56,9 @@ The included [vercel.json](./vercel.json) routes:
 
 - `/` -> OASIS Chinese homepage
 - `/oasis/zh/today`, `/oasis/en/today`, `/oasis/tc/today` -> SEO-rendered OASIS pages
-- `/oasis/sitemap.xml` -> generated sitemap
-- `/robots.txt` -> generated robots file
+- `/sitemap.xml` -> static sitemap index
+- `/oasis/sitemap.xml` -> static OASIS sitemap
+- `/robots.txt` -> static robots file
 - `/admin/analytics.html` -> simple internal analytics dashboard
 
 ### 3. Vercel + Supabase Production Checks
@@ -67,6 +68,7 @@ After deploy, verify:
 - `/oasis/zh/today` loads
 - `/oasis/en/today` loads
 - `/oasis/tc/today` loads
+- `/sitemap.xml` references `/oasis/sitemap.xml`
 - `/oasis/sitemap.xml` contains all language routes
 - `/api/oasis/joy?lang=zh` returns JSON
 - `/api/oasis/audio/fire` redirects to Supabase Storage

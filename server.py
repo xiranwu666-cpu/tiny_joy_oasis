@@ -33,6 +33,8 @@ WEBSITE_NAMES = {
 
 OASIS_LANGS = {"en": "en", "zh": "zh-CN", "tc": "zh-Hant"}
 OASIS_ROUTES = {"today", "sound", "vent", "joy"}
+OASIS_PUBLIC_ROUTES = {"today": "today", "sound": "white-noise", "vent": "release", "joy": "joy"}
+OASIS_GUIDE_SLUGS = ["digital-hug", "anxiety-breathing", "white-noise", "anonymous-venting", "cozy-web-corner"]
 OASIS_AUDIO_ASSETS = {
     "fire": {
         "label": "Woodfire",
@@ -1038,6 +1040,8 @@ class Handler(BaseHTTPRequestHandler):
             return self.send_json({"ok": True, "db": str(DB_PATH.name), "time": now_iso()})
         if path == "/robots.txt":
             return self.handle_robots()
+        if path == "/sitemap.xml":
+            return self.handle_root_sitemap()
         if path == "/oasis/sitemap.xml":
             return self.handle_oasis_sitemap()
         if path == "/api/data-sources":
@@ -1110,19 +1114,50 @@ class Handler(BaseHTTPRequestHandler):
 
     def handle_robots(self):
         origin = public_origin(self)
-        self.send_text(f"User-agent: *\nAllow: /oasis/\nSitemap: {origin}/oasis/sitemap.xml\n")
+        self.send_text(
+            "\n".join(
+                [
+                    "User-agent: *",
+                    "Allow: /",
+                    "Disallow: /api/",
+                    "Disallow: /admin/",
+                    "Disallow: /scripts/",
+                    "Disallow: /supabase/",
+                    "",
+                    f"Sitemap: {origin}/sitemap.xml",
+                    "",
+                ]
+            )
+        )
+
+    def handle_root_sitemap(self):
+        origin = public_origin(self)
+        body = "\n".join(
+            [
+                '<?xml version="1.0" encoding="UTF-8"?>',
+                '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+                "  <sitemap>",
+                f"    <loc>{origin}/oasis/sitemap.xml</loc>",
+                "  </sitemap>",
+                "</sitemapindex>",
+                "",
+            ]
+        )
+        self.send_text(body, "application/xml; charset=utf-8")
 
     def handle_oasis_sitemap(self):
         origin = public_origin(self)
         urls = []
         for lang in OASIS_LANGS:
             for route in sorted(OASIS_ROUTES):
-                urls.append(f"{origin}/oasis/{lang}/{route}")
+                urls.append((f"{origin}/oasis/{lang}/{OASIS_PUBLIC_ROUTES[route]}", "0.8"))
+            for slug in OASIS_GUIDE_SLUGS:
+                urls.append((f"{origin}/oasis/{lang}/guide/{slug}", "0.7"))
         body = "\n".join(
             [
                 '<?xml version="1.0" encoding="UTF-8"?>',
                 '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-                *[f"  <url><loc>{url}</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>" for url in urls],
+                *[f"  <url><loc>{url}</loc><changefreq>weekly</changefreq><priority>{priority}</priority></url>" for url, priority in urls],
                 "</urlset>",
                 "",
             ]

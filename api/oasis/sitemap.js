@@ -20,5 +20,6 @@ module.exports = async function handler(req, res) {
   ].join("\n");
   res.statusCode = 200;
   res.setHeader("Content-Type", "application/xml; charset=utf-8");
+  res.setHeader("Cache-Control", "public, max-age=0, s-maxage=86400, stale-while-revalidate=3600");
   res.end(body);
 };
